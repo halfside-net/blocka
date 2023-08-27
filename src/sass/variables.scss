@@ -25,24 +25,12 @@ $header-height: 54px;
 $page-background: $teal;
 $page-font-color: $white;
 $word-background: $white;
-$word-background-bonus: $yellow;
-$word-background-solved: $red;
-$word-background-solved-bonus: $gold;
 $word-border-color: $black;
-$word-border-color-solved: $white;
 $word-border-radius: 9999px;
 $word-border-style: solid;
 $word-border-width: 1px;
 $word-color: $black;
-$word-color-solved: $white;
 $word-font-size: 16px;
-$word-outline-color: $black;
-$word-outline-color-focus: $orange;
-$word-outline-color-solved: $black;
-$word-outline-style: solid;
-$word-outline-style-solved: solid;
-$word-outline-width: 1px;
-$word-outline-width-solved: 2px;
 
 $header-button-width: $header-height;
 
@@ -69,15 +57,9 @@ $App-button-width: $header-button-width;
 $App-font-family: $font-family-main;
 $App-header-height: $header-height;
 
-// Association
+// Game
 
-$Association-color: $black;
-$Association-thickness: 2px;
-
-$Association-background-solved: $Association-color;
-$Association-background-unsolved:
-  (calc(50% + #{$Association-thickness * 1.5}) 0) / ($Association-thickness * 6 100%)
-  linear-gradient(90deg, $Association-color 50%, transparent 50%);
+$Game-padding-top: $header-height;
 
 // Home
 
@@ -87,42 +69,9 @@ $Home-padding-bottom: 5vh;
 $Home-padding-side: 32px;
 $Home-padding-top: 5vh;
 
-// Level
-
-$Level-font-family: $font-family-main;
-$Level-padding-top: $header-height;
-
-// LevelCard
-
-$LevelCard-border-radius: $border-radius-default;
-$LevelCard-info-background: $gray-light;
-$LevelCard-padding: 16px;
-$LevelCard-progress-bar-background-color: $white;
-$LevelCard-progress-bar-background-progress: linear-gradient($green-light, $teal);
-$LevelCard-progress-bar-background-progress-complete: $gold;
-$LevelCard-progress-bar-border-width: 2px;
-$LevelCard-progress-bar-margin: 2px;
-$LevelCard-progress-bar-width: 16px;
-$LevelCard-title-background: $white;
-$LevelCard-title-color: $black;
-$LevelCard-title-color-complete: $black;
-$LevelCard-title-font-size: 18px;
-$LevelCard-title-font-weight: bold;
-$LevelCard-toggle-background: $blue;
-$LevelCard-toggle-border: 2px solid currentColor;
-$LevelCard-toggle-color: $white;
-$LevelCard-toggle-size: 20px;
-
-$LevelCard-toggle-background-expanded:
-  center / ($LevelCard-toggle-size 2px)
-  no-repeat
-  $blue
-  linear-gradient($LevelCard-toggle-color, $LevelCard-toggle-color);
-
 // LevelSelect
 
 $LevelSelect-background: $page-background;
-$LevelSelect-card-spacing: $container-padding;
 $LevelSelect-home-button-height: $header-height;
 $LevelSelect-padding-bottom: 1.5 * $container-padding;
 $LevelSelect-padding-left: $container-padding;
@@ -147,43 +96,3 @@ $SettingsPage-setting-font-size: 18px;
 $SettingsPage-setting-font-weight: bold;
 $SettingsPage-setting-margin: 16px;
 $SettingsPage-setting-padding: 12px;
-
-// Word
-
-$Word-background: $word-background;
-$Word-background-bonus: $word-background-bonus;
-$Word-background-solved: $word-background-solved;
-$Word-background-solved-bonus: $word-background-solved-bonus;
-$Word-border-color: $word-border-color;
-$Word-border-color-solved: $word-border-color-solved;
-$Word-border-radius: $word-border-radius;
-$Word-border-style: $word-border-style;
-$Word-border-width: $word-border-width;
-$Word-color: $word-color;
-$Word-color-solved: $word-color-solved;
-$Word-font-size: $word-font-size;
-$Word-help-text-indicator-background: $green-light;
-$Word-help-text-indicator-border-color: $black;
-$Word-help-text-indicator-border-style: solid;
-$Word-help-text-indicator-border-width: 1px;
-$Word-help-text-indicator-border-radius: 50%;
-$Word-help-text-indicator-color: $black;
-$Word-help-text-indicator-size: 16px;
-$Word-help-text-background: $white;
-$Word-help-text-border: 1px solid $black;
-$Word-help-text-border-radius: 8px;
-$Word-help-text-color: $black;
-$Word-help-text-padding: 8px;
-$Word-help-text-margin-left-right: $header-button-width + $container-padding;
-$Word-help-text-margin-top: $container-padding;
-$Word-help-text-width: 100%;
-$Word-line-height: 1;
-$Word-outline-color: $word-outline-color;
-$Word-outline-color-focus: $word-outline-color-focus;
-$Word-outline-color-solved: $word-outline-color-solved;
-$Word-outline-style: $word-outline-style;
-$Word-outline-style-solved: $word-outline-style-solved;
-$Word-outline-width: $word-outline-width;
-$Word-outline-width-solved: $word-outline-width-solved;
-$Word-padding-left-right: 6px;
-$Word-padding-top-bottom: 2px;

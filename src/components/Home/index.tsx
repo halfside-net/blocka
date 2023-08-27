@@ -7,7 +7,7 @@ export default function Home(props: {
   return (
     <div className="Home">
       <img
-        alt="webAssociate"
+        alt="Blocka"
         className="Home-logo"
         src={logo}
       />

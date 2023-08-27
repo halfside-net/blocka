@@ -1,8 +1,8 @@
 {
-  "description": "Solve a web of word associations in this re-creation of a classic puzzle game!",
+  "description": "TODO",
   "siteDomain": "www.halfside.net",
-  "sitePath": "/webassociate/",
-  "themeColor": "#5a90bb",
-  "title": "webAssociate",
-  "titleShort": "webAssociate"
+  "sitePath": "/blocka/",
+  "themeColor": "#000",
+  "title": "Blocka",
+  "titleShort": "Blocka"
 }

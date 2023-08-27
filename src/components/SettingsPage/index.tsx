@@ -29,14 +29,9 @@ export default function SettingsPage(props: {
     <div className="SettingsPage">
       <form className="SettingsPage-form">
         <SettingsCheckbox
-          checked={!props.settings.disableHelpText}
-          label="Show Hints"
-          onChange={checked => props.onChange({ disableHelpText: !checked })}
-        />
-        <SettingsCheckbox
-          checked={props.settings.hideCompletedLevels}
-          label="Hide Completed Levels"
-          onChange={checked => props.onChange({ hideCompletedLevels: checked })}
+          checked={!props.settings.disableAnimations}
+          label="Animations"
+          onChange={checked => props.onChange({ disableAnimations: !checked })}
         />
       </form>
     </div>

@@ -1,11 +1,8 @@
-import type { LevelData } from '~/components/LevelView/types';
+import type { GameData } from '~/components/Game/types';
 import type { Settings } from '~/components/SettingsPage/types';
 
 export interface AppDataV1 {
-    activeLevelId?: string,
-    levelData?: {
-        [levelId: string]: LevelData
-    },
+    gameData?: GameData,
     settings?: Settings,
     /** The version of the app data format */
     version: 1

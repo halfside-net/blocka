@@ -1,0 +1,13 @@
+@import '~/sass/common.scss';
+
+/** @define Game */
+
+.Game {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  padding-top: $Game-padding-top;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  flex-direction: column;
+}
