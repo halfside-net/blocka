@@ -1,5 +1,4 @@
 import './index.scss';
-import { useEffect, useRef, useState } from 'react';
 import type { GameData } from './types';
 
 export default function Game(props: {
@@ -8,7 +7,7 @@ export default function Game(props: {
 }) {
   return (
     <div className="Game">
-
+      TODO: Game
     </div>
   );
 }
