@@ -4,7 +4,7 @@ import { ReactComponent as CloseSVG } from '~/assets/images/close.svg';
 import { ReactComponent as SettingsSVG } from '~/assets/images/settings.svg';
 import Home from '~/components/Home';
 import Game from '~/components/Game';
-import type { GameData } from '~/components/Game/types';
+import { GameData } from '~/components/Game/types';
 import SettingsPage from '~/components/SettingsPage';
 import { Settings } from '~/components/SettingsPage/types';
 import { isAppDataV1 } from './helpers';
