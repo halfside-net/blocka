@@ -4,45 +4,33 @@ $font-family-main: Helvetica,sans-serif;
 
 // -------- Colors --------
 
+$birch: #d2b48c;
 $black: #000;
-$blue: #135;
-$gold: #b80;
-$gray: #ccc;
-$gray-light: #eee;
-$green: #283;
-$green-light: #ad8;
-$orange: #f90;
-$red: #c00;
-$teal: #5a90bb;
+$chestnut: #763b00;
+$oak: #af8b4c;
+$mahogany: #3e2727;
 $white: #fff;
-$yellow: #ed8;
 
 // -------- Common Variables --------
 
 $border-radius-default: 8px;
 $container-padding: 16px;
 $header-height: 54px;
-$page-background: $teal;
-$page-font-color: $white;
-$word-background: $white;
-$word-border-color: $black;
-$word-border-radius: 9999px;
-$word-border-style: solid;
-$word-border-width: 1px;
-$word-color: $black;
-$word-font-size: 16px;
+$page-background: $oak;
+$theme-color-dark: $mahogany;
+$theme-color-light: $birch;
 
 $header-button-width: $header-height;
 
 // -------- Module Variables --------
 
-$Button-background: $word-background;
-$Button-border-style: $word-border-style;
-$Button-border-color: $word-border-color;
-$Button-border-radius: $word-border-radius;
-$Button-border-width-base: 2 * $word-border-width;
-$Button-color: $word-color;
-$Button-font-size-base: $word-font-size;
+$Button-background: $theme-color-light;
+$Button-border-style: solid;
+$Button-border-color: $theme-color-dark;
+$Button-border-radius: 16px;
+$Button-border-width-base: 4px;
+$Button-color: $theme-color-dark;
+$Button-font-size-base: 16px;
 $Button-padding-left-right-base: 12px;
 $Button-padding-top-bottom-base: 6px;
 
@@ -57,9 +45,23 @@ $App-button-width: $header-button-width;
 $App-font-family: $font-family-main;
 $App-header-height: $header-height;
 
+// Board
+
+$Board-background: $theme-color-dark;
+$Board-border-color: $chestnut;
+
 // Game
 
-$Game-padding-top: $header-height;
+$Game-header-background-color: $theme-color-dark;
+$Game-header-color: $theme-color-light;
+$Game-header-font-size: 24px;
+$Game-header-font-weight: bold;
+$Game-header-gap: 16px;
+$Game-padding-bottom: 2 * $container-padding;
+$Game-padding-side: $container-padding;
+$Game-padding-top: $header-height + $container-padding;
+$Game-score-border-radius: 8px;
+$Game-score-padding: 8px 12px;
 
 // Home
 
@@ -83,15 +85,15 @@ $LevelSelect-padding-top: $header-height + $container-padding;
 $SettingsPage-background: $page-background;
 $SettingsPage-checkbox-border-radius: 25%;
 $SettingsPage-checkbox-border-width: 2px;
-$SettingsPage-checkbox-color: $teal;
+$SettingsPage-checkbox-color: $theme-color-light;
 $SettingsPage-checkbox-margin: 12px;
 $SettingsPage-checkbox-size: 32px;
 $SettingsPage-padding-bottom: 1.5 * $container-padding;
 $SettingsPage-padding-side: $container-padding;
 $SettingsPage-padding-top: $header-height + 1.5 * $container-padding;
-$SettingsPage-setting-background: $white;
+$SettingsPage-setting-background: $theme-color-dark;
 $SettingsPage-setting-border-radius: $border-radius-default;
-$SettingsPage-setting-color: $black;
+$SettingsPage-setting-color: $theme-color-light;
 $SettingsPage-setting-font-size: 18px;
 $SettingsPage-setting-font-weight: bold;
 $SettingsPage-setting-margin: 16px;

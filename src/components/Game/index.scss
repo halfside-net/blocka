@@ -6,8 +6,30 @@
   display: flex;
   height: 100%;
   width: 100%;
-  padding-top: $Game-padding-top;
-  overflow: auto;
-  -webkit-overflow-scrolling: touch;
+  padding:
+    $Game-padding-top
+    $Game-padding-side
+    $Game-padding-bottom;
   flex-direction: column;
+
+  &-header {
+    margin-bottom: $Game-header-gap;
+    color: $Game-header-color;
+    font-size: $Game-header-font-size;
+    font-weight: $Game-header-font-weight;
+  }
+
+  &-scores {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: $Game-header-gap;
+  }
+
+  &-score {
+    display: flex;
+    border-radius: $Game-score-border-radius;
+    background-color: $Game-header-background-color;
+    padding: $Game-score-padding;
+    justify-content: space-between;
+  }
 }
