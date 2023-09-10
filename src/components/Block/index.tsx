@@ -10,7 +10,6 @@ export default function Block(props: {
         + (props.type === BlockType.NORMAL ? ' Block--normal' : '')
       }
     >
-      {props.type}
     </div>
   );
 }

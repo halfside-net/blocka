@@ -6,7 +6,7 @@ $font-family-main: Helvetica,sans-serif;
 
 $birch: #d2b48c;
 $black: #000;
-$chestnut: #763b00;
+$chestnut: #8b5219;
 $oak: #af8b4c;
 $mahogany: #3e2727;
 $white: #fff;
@@ -20,6 +20,7 @@ $page-background: $oak;
 $theme-color-dark: $mahogany;
 $theme-color-light: $birch;
 
+$block-border-radius: 4px;
 $header-button-width: $header-height;
 
 // -------- Module Variables --------
@@ -27,7 +28,7 @@ $header-button-width: $header-height;
 $Button-background: $theme-color-light;
 $Button-border-style: solid;
 $Button-border-color: $theme-color-dark;
-$Button-border-radius: 16px;
+$Button-border-radius: 2 * $border-radius-default;
 $Button-border-width-base: 4px;
 $Button-color: $theme-color-dark;
 $Button-font-size-base: 16px;
@@ -47,8 +48,16 @@ $App-header-height: $header-height;
 
 // Board
 
-$Board-background: $theme-color-dark;
-$Board-border-color: $chestnut;
+$Board-background-color: $theme-color-dark;
+$Board-border-radius: $border-radius-default;
+$Board-cell-border-radius: $block-border-radius;
+$Board-divider-color: $chestnut;
+$Board-divider-width: 2px;
+$Board-padding: 8px;
+
+// Block
+
+$Block-background-normal: $theme-color-light;
 
 // Game
 
@@ -60,7 +69,7 @@ $Game-header-gap: 16px;
 $Game-padding-bottom: 2 * $container-padding;
 $Game-padding-side: $container-padding;
 $Game-padding-top: $header-height + $container-padding;
-$Game-score-border-radius: 8px;
+$Game-score-border-radius: $border-radius-default;
 $Game-score-padding: 8px 12px;
 
 // Home

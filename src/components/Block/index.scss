@@ -3,5 +3,7 @@
 /** @define Block */
 
 .Block {
-  // TODO
+  &--normal {
+    background: $Block-background-normal;
+  }
 }

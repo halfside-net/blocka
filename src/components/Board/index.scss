@@ -4,4 +4,15 @@
 
 .Board {
   display: grid;
+  border-radius: $Board-border-radius;
+  border: $Board-padding solid $Board-background-color;
+  background-color: $Board-divider-color;
+  padding: $Board-divider-width;
+  gap: $Board-divider-width;
+
+  &-cell {
+    aspect-ratio: 1;
+    border-radius: $block-border-radius;
+    background-color: $Board-background-color;
+  }
 }
