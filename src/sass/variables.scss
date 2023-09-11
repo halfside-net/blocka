@@ -14,14 +14,28 @@ $white: #fff;
 // -------- Common Variables --------
 
 $border-radius-default: 8px;
+$block-border-radius: 4px;
 $container-padding: 16px;
 $header-height: 54px;
 $page-background: $oak;
+$shadow-blur-default: 2px;
+$shadow-color-default: #0007;
+$shadow-offset-x-default: 0;
+$shadow-offset-y-default: 1px;
+$shadow-spread-default: 2px;
 $theme-color-dark: $mahogany;
 $theme-color-light: $birch;
 
-$block-border-radius: 4px;
+$board-background-color: $theme-color-dark;
 $header-button-width: $header-height;
+$shadow-default:
+  $shadow-offset-x-default
+  $shadow-offset-y-default
+  $shadow-blur-default
+  $shadow-spread-default
+  $shadow-color-default;
+
+$shadow-inset-default: inset $shadow-default;
 
 // -------- Module Variables --------
 
@@ -48,8 +62,10 @@ $App-header-height: $header-height;
 
 // Board
 
-$Board-background-color: $theme-color-dark;
+$Board-background-color: $board-background-color;
 $Board-border-radius: $border-radius-default;
+$Board-shadow: $shadow-default;
+$Board-shadow-inset: $shadow-inset-default;
 $Board-cell-border-radius: $block-border-radius;
 $Board-divider-color: $chestnut;
 $Board-divider-width: 2px;
@@ -61,15 +77,20 @@ $Block-background-normal: $theme-color-light;
 
 // Game
 
-$Game-header-background-color: $theme-color-dark;
-$Game-header-color: $theme-color-light;
-$Game-header-font-size: 24px;
-$Game-header-font-weight: bold;
 $Game-header-gap: 16px;
 $Game-padding-bottom: 2 * $container-padding;
 $Game-padding-side: $container-padding;
 $Game-padding-top: $header-height + $container-padding;
+$Game-pieces-background: $board-background-color;
+$Game-pieces-border-radius: $border-radius-default;
+$Game-pieces-gap: 16px;
+$Game-pieces-shadow: $shadow-inset-default;
+$Game-score-background-color: $theme-color-dark;
 $Game-score-border-radius: $border-radius-default;
+$Game-score-shadow: $shadow-inset-default;
+$Game-score-color: $theme-color-light;
+$Game-score-font-size: 24px;
+$Game-score-font-weight: bold;
 $Game-score-padding: 8px 12px;
 
 // Home

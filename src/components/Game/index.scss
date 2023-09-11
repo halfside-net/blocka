@@ -11,12 +11,10 @@
     $Game-padding-side
     $Game-padding-bottom;
   flex-direction: column;
+  justify-content: center;
 
   &-header {
     margin-bottom: $Game-header-gap;
-    color: $Game-header-color;
-    font-size: $Game-header-font-size;
-    font-weight: $Game-header-font-weight;
   }
 
   &-scores {
@@ -27,9 +25,30 @@
 
   &-score {
     display: flex;
+    box-shadow: $Game-score-shadow;
     border-radius: $Game-score-border-radius;
-    background-color: $Game-header-background-color;
+    background-color: $Game-score-background-color;
     padding: $Game-score-padding;
     justify-content: space-between;
+    color: $Game-score-color;
+    font-size: $Game-score-font-size;
+    font-weight: $Game-score-font-weight;
+    white-space: pre;
+  }
+
+  &-pieces {
+    display: grid;
+    margin-top: $Game-pieces-gap;
+    gap: $Game-pieces-gap;
+  }
+
+  &-pieceSlot {
+    display: flex;
+    box-shadow: $Game-pieces-shadow;
+    aspect-ratio: 1;
+    border-radius: $Game-pieces-border-radius;
+    background: $Game-pieces-background;
+    justify-content: center;
+    align-items: center;
   }
 }

@@ -3,14 +3,25 @@
 /** @define Board */
 
 .Board {
-  display: grid;
+  box-shadow: $Board-shadow-inset;
+  height: 100%;
+  width: 100%;
   border-radius: $Board-border-radius;
-  border: $Board-padding solid $Board-background-color;
-  background-color: $Board-divider-color;
-  padding: $Board-divider-width;
-  gap: $Board-divider-width;
+  background-color: $Board-background-color;
+  padding: $Board-padding;
+
+  &-grid {
+    display: grid;
+    box-shadow: $Board-shadow;
+    height: 100%;
+    width: 100%;
+    background-color: $Board-divider-color;
+    padding: $Board-divider-width;
+    gap: $Board-divider-width;
+  }
 
   &-cell {
+    box-shadow: $Board-shadow-inset;
     aspect-ratio: 1;
     border-radius: $block-border-radius;
     background-color: $Board-background-color;

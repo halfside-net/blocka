@@ -13,21 +13,22 @@ export default function Board(props: {
   );
 
   return (
-    <div
-      className="Board"
-      style={{
-        gridTemplateColumns: `repeat(${props.width}, 1fr)`,
-        gridTemplateRows: `repeat(${props.height}, 1fr)`
-      }}
-    >
-      {boardState.map((row, rowNum) => row.map((blockType, colNum) => (
-        <div className="Board-cell">
-          <Block
-            key={`${rowNum},${colNum}`}
-            type={blockType}
-          />
-        </div>
-      )))}
+    <div className="Board">
+      <div
+        className="Board-grid"
+        style={{
+          gridTemplateColumns: `repeat(${props.width}, 1fr)`
+        }}
+      >
+        {boardState.map((row, rowNum) => row.map((blockType, colNum) => (
+          <div className="Board-cell">
+            <Block
+              key={`${rowNum},${colNum}`}
+              type={blockType}
+            />
+          </div>
+        )))}
+      </div>
     </div>
   );
 }

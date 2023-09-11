@@ -16,20 +16,20 @@ export default function Game(props: {
       <div className="Game-header">
         <div className="Game-scores">
           <div className="Game-score Game-score--current">
-            <div className="Game-scoreLabel">
-              Score:
-            </div>
-            <div className="Game-scoreValue">
+            <span className="Game-scoreLabel">
+              Score:{' '}
+            </span>
+            <span className="Game-scoreValue">
               {props.gameData?.score ?? 0}
-            </div>
+            </span>
           </div>
           <div className="Game-score Game-score--best">
-            <div className="Game-scoreLabel">
-              Best Score:
-            </div>
-            <div className="Game-scoreValue">
+            <span className="Game-scoreLabel">
+              Best Score:{' '}
+            </span>
+            <span className="Game-scoreValue">
               {props.gameData?.highScore ?? 0}
-            </div>
+            </span>
           </div>
         </div>
       </div>
@@ -40,7 +40,12 @@ export default function Game(props: {
           width={boardWidth}
         />
       </div>
-      <div className="Game-pieces">
+      <div
+        className="Game-pieces"
+        style={{
+          gridTemplateColumns: `repeat(${numPieces}, 1fr)`
+        }}
+      >
         {Array.from({ length: numPieces }, (_, i) =>
           <div
             className="Game-pieceSlot"
