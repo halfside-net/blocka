@@ -3,12 +3,12 @@
 /** @define Board */
 
 .Board {
+  --board-dbr: #{$Board-divider-width-to-block-size-ratio};
+  --board-pbr: #{$Board-padding-to-block-size-ratio};
+
   box-shadow: $Board-shadow-inset;
-  height: 100%;
-  width: 100%;
   border-radius: $Board-border-radius;
   background-color: $Board-background-color;
-  padding: $Board-padding;
 
   &-grid {
     display: grid;
@@ -16,13 +16,10 @@
     height: 100%;
     width: 100%;
     background-color: $Board-divider-color;
-    padding: $Board-divider-width;
-    gap: $Board-divider-width;
   }
 
   &-cell {
     box-shadow: $Board-shadow-inset;
-    aspect-ratio: 1;
     border-radius: $block-border-radius;
     background-color: $Board-background-color;
   }

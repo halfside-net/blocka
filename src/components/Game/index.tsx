@@ -33,13 +33,12 @@ export default function Game(props: {
           </div>
         </div>
       </div>
-      <div className="Game-board">
-        <Board
-          height={boardHeight}
-          state={props.gameData?.boardState}
-          width={boardWidth}
-        />
-      </div>
+      <Board
+        className="Game-board"
+        height={boardHeight}
+        state={props.gameData?.boardState}
+        width={boardWidth}
+      />
       <div
         className="Game-pieces"
         style={{

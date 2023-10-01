@@ -3,6 +3,8 @@
 /** @define Game */
 
 .Game {
+  --game-padding-side: #{$Game-padding-side};
+
   display: flex;
   height: 100%;
   width: 100%;
@@ -15,6 +17,12 @@
 
   &-header {
     margin-bottom: $Game-header-gap;
+  }
+
+  &-board {
+    align-self: center;
+    height: 0;
+    flex-grow: 1;
   }
 
   &-scores {
