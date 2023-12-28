@@ -24,7 +24,7 @@ export default function Game(props: {
         <div className="Game-scores">
           <div className="Game-score Game-score--current">
             <span className="Game-scoreValue">
-              {props.gameData?.score ?? 0}
+              {(props.gameData?.score ?? 0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
             </span>
           </div>
           <div className="Game-score Game-score--best">
@@ -33,7 +33,7 @@ export default function Game(props: {
               title="High Score"
             />
             <span className="Game-scoreValue">
-              {props.gameData?.highScore ?? 0}
+              {(props.gameData?.highScore ?? 0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
             </span>
           </div>
         </div>

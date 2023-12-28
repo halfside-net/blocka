@@ -27,7 +27,7 @@ const testGameData: AppDataV1 = {
       [1, 0, 0, 1, 1, 0, 1, 0, 0, 1],
       [0, 1, 1, 0, 1, 1, 0, 1, 1, 1]
     ],
-    highScore: 123456,
+    highScore: 1234567,
     piecesUsed: [false, false, false],
     score: 0,
     seed: 12345
