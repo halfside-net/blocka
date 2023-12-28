@@ -1,6 +1,7 @@
 import './index.scss';
 import { useEffect, useState } from 'react';
 import { ReactComponent as CloseSVG } from '~/assets/images/close.svg';
+import { ReactComponent as HomeSVG } from '~/assets/images/home.svg';
 import { ReactComponent as SettingsSVG } from '~/assets/images/settings.svg';
 import Home from '~/components/Home';
 import Game from '~/components/Game';
@@ -37,9 +38,8 @@ const testGameData: AppDataV1 = {
 
 async function loadData(): Promise<AppDataV1> {
   // TODO: Remove this
-  return testGameData;
+  // return testGameData;
 
-/*
   const jsonData = window.localStorage.getItem(appId);
 
   if (jsonData) {
@@ -55,7 +55,6 @@ async function loadData(): Promise<AppDataV1> {
   return {
     version: 1
   };
-*/
 }
 
 export default function App() {
@@ -101,6 +100,16 @@ export default function App() {
       }
     >
       <header className="App-header">
+        {!viewHome && <button
+            aria-label="Home"
+            className="App-levelselectButton"
+            onClick={() => setViewHome(true)}
+          >
+            <HomeSVG
+              className="App-levelselectButtonIcon"
+            />
+          </button>
+        }
         {isLoaded &&
           <button
             aria-label={viewSettings ? 'Close settings' : 'Settings'}
