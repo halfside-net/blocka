@@ -39,12 +39,7 @@ export default function Game(props: {
         state={props.gameData?.boardState}
         width={boardWidth}
       />
-      <div
-        className="Game-pieces"
-        style={{
-          gridTemplateColumns: `repeat(${numPieces}, 1fr)`
-        }}
-      >
+      <div className="Game-pieces">
         {Array.from({ length: numPieces }, (_, i) =>
           <div
             className="Game-pieceSlot"

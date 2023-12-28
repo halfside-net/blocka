@@ -45,14 +45,18 @@
   }
 
   &-pieces {
-    display: grid;
+    display: flex;
     margin-top: $Game-pieces-gap;
+    justify-content: center;
     gap: $Game-pieces-gap;
   }
 
   &-pieceSlot {
     display: flex;
     box-shadow: $Game-pieces-shadow;
+    width: 0;
+    max-width: $Game-pieces-slot-width-max;
+    flex-grow: 1;
     aspect-ratio: 1;
     border-radius: $Game-pieces-border-radius;
     background: $Game-pieces-background;
