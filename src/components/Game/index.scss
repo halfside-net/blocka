@@ -3,8 +3,6 @@
 /** @define Game */
 
 .Game {
-  --game-padding-side: #{$Game-padding-side};
-
   display: flex;
   height: 100%;
   width: 100%;
@@ -17,12 +15,6 @@
 
   &-header {
     margin-bottom: $Game-header-gap;
-  }
-
-  &-board {
-    align-self: center;
-    height: 0;
-    flex-grow: 1;
   }
 
   &-scores {
@@ -38,16 +30,44 @@
     background-color: $Game-score-background-color;
     padding: $Game-score-padding;
     justify-content: space-between;
+    line-height: $Game-score-line-height;
     color: $Game-score-color;
     font-size: $Game-score-font-size;
     font-weight: $Game-score-font-weight;
     white-space: pre;
   }
 
+  &-main {
+    display: flex;
+    align-self: center;
+    width: 100%;
+    flex-grow: 1;
+    flex-direction: column;
+    // w = 100vh - c - (w - (numPieces - 1) * piecesGap) / numPieces
+    // w = 100vh - c - (w - (numPieces * piecesGap - piecesGap)) / numPieces
+    // w = 100vh - c - (w - numPieces * piecesGap + piecesGap) / numPieces
+    // w = 100vh - c - (w / numPieces - piecesGap + piecesGap / numPieces)
+    // w = 100vh - c - (w / numPieces + piecesGap / numPieces - piecesGap)
+    // w = 100vh - c - (w / numPieces + piecesGap * (1 / numPieces - 1))
+    // w = 100vh - c - w / numPieces + piecesGap * (1 - 1 / numPieces)
+    // w + w / numPieces = 100vh - c + piecesGap * (1 - 1 / numPieces)
+    // w * (1 + 1 / numPieces) = 100vh - c + piecesGap * (1 - 1 / numPieces)
+    // w = (100vh - c + piecesGap * (1 - 1 / numPieces)) / (1 + 1 / numPieces)
+    // w = (100vh - c + piecesGap - piecesGap / numPieces) / (1 + 1 / numPieces)
+    // w = (100vh - (c - piecesGap) - piecesGap / numPieces) / (1 + 1 / numPieces)
+    max-width: calc((100vh - #{$Game-padding-top + 2 * $Game-score-padding-vertical + $Game-score-line-height * $Game-score-font-size + $Game-header-gap + $Game-pieces-gap + $Game-padding-bottom - $Game-pieces-gap} - #{$Game-pieces-gap} / var(--num-pieces)) / (1 + 1 / var(--num-pieces)));
+  }
+
+  &-board {
+    max-height: calc(100vw - #{2 * $Game-padding-side});
+    flex-grow: 1;
+  }
+
   &-pieces {
     display: flex;
     margin-top: $Game-pieces-gap;
     justify-content: center;
+    align-items: flex-start;
     gap: $Game-pieces-gap;
   }
 
@@ -55,7 +75,6 @@
     display: flex;
     box-shadow: $Game-pieces-shadow;
     width: 0;
-    max-width: $Game-pieces-slot-width-max;
     flex-grow: 1;
     aspect-ratio: 1;
     border-radius: $Game-pieces-border-radius;

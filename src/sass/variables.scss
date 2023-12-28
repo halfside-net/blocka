@@ -80,7 +80,7 @@ $Board-shadow: $shadow-default;
 $Board-shadow-inset: $shadow-inset-default;
 $Board-cell-border-radius: $block-border-radius;
 $Board-divider-color: $chestnut;
-$Board-padding-to-block-size-ratio: 0.2;
+$Board-padding: 2%;
 
 // Block
 
@@ -97,14 +97,17 @@ $Game-pieces-background: $board-background-color;
 $Game-pieces-border-radius: $border-radius-default;
 $Game-pieces-gap: 16px;
 $Game-pieces-shadow: $shadow-inset-default;
-$Game-pieces-slot-width-max: 200px;
 $Game-score-background-color: $theme-color-dark;
 $Game-score-border-radius: $border-radius-default;
 $Game-score-shadow: $shadow-inset-default;
 $Game-score-color: $theme-color-light;
 $Game-score-font-size: 24px;
 $Game-score-font-weight: bold;
-$Game-score-padding: 8px 12px;
+$Game-score-line-height: 1.2;
+$Game-score-padding-side: 12px;
+$Game-score-padding-vertical: 8px;
+
+$Game-score-padding: $Game-score-padding-vertical $Game-score-padding-side;
 
 // Home
 

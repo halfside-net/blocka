@@ -2,7 +2,7 @@ import './index.scss';
 import { mulberry32Generator } from '~/ts/helpers';
 import Board from '~/components/Board';
 import Piece from '~/components/Piece';
-import { boardHeight, boardWidth, numPieces, piecePool } from './constants';
+import { boardSize, numPieces, piecePool } from './constants';
 import type { GameData } from './types';
 
 export default function Game(props: {
@@ -12,7 +12,13 @@ export default function Game(props: {
   const rng = mulberry32Generator(props.gameData.seed, 91661749);
 
   return (
-    <div className="Game">
+    <div
+      className="Game"
+      style={{
+        ['--board-size' as string]: boardSize,
+        ['--num-pieces' as string]: numPieces
+      }}
+    >
       <div className="Game-header">
         <div className="Game-scores">
           <div className="Game-score Game-score--current">
@@ -25,7 +31,7 @@ export default function Game(props: {
           </div>
           <div className="Game-score Game-score--best">
             <span className="Game-scoreLabel">
-              Best Score:{' '}
+              Best:{' '}
             </span>
             <span className="Game-scoreValue">
               {props.gameData?.highScore ?? 0}
@@ -33,25 +39,26 @@ export default function Game(props: {
           </div>
         </div>
       </div>
-      <Board
-        className="Game-board"
-        height={boardHeight}
-        state={props.gameData?.boardState}
-        width={boardWidth}
-      />
-      <div className="Game-pieces">
-        {Array.from({ length: numPieces }, (_, i) =>
-          <div
-            className="Game-pieceSlot"
-            key={i}
-          >
-            {!props.gameData?.piecesUsed?.[i] && (
-              <Piece
-                pieceData={piecePool[Math.floor(rng() * piecePool.length)]}
-              />
-            )}
-          </div>
-        )}
+      <div className="Game-main">
+        <Board
+          className="Game-board"
+          size={boardSize}
+          state={props.gameData?.boardState}
+        />
+        <div className="Game-pieces">
+          {Array.from({ length: numPieces }, (_, i) =>
+            <div
+              className="Game-pieceSlot"
+              key={i}
+            >
+              {!props.gameData?.piecesUsed?.[i] && (
+                <Piece
+                  pieceData={piecePool[Math.floor(rng() * piecePool.length)]}
+                />
+              )}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

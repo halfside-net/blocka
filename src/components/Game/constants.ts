@@ -4,8 +4,7 @@ import { rotatePiece } from "./helpers";
 
 // Board Configuration
 
-export const boardHeight = 10;
-export const boardWidth = 10;
+export const boardSize = 10;
 export const numPieces = 3;
 
 // Piece Shapes

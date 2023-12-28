@@ -3,12 +3,10 @@
 /** @define Board */
 
 .Board {
-  --board-dbr: #{$block-gap-to-size-ratio}; // Ratio of board divider size to block size
-  --board-pbr: #{$Board-padding-to-block-size-ratio}; // Ratio of board padding to block size
-
   box-shadow: $Board-shadow-inset;
   border-radius: $Board-border-radius;
   background-color: $Board-background-color;
+  padding: $Board-padding;
 
   &-grid {
     display: grid;
@@ -16,6 +14,9 @@
     height: 100%;
     width: 100%;
     background-color: $Board-divider-color;
+    padding: calc(100% / (1 + var(--board-size) * #{1 + 1 / $block-gap-to-size-ratio}));
+    grid-template-columns: repeat(var(--board-size), 1fr);
+    gap: calc(100% / (1 + var(--board-size) * #{1 + 1 / $block-gap-to-size-ratio}));
   }
 
   &-cell {
