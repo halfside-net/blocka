@@ -9,7 +9,6 @@ import SettingsPage from '~/components/SettingsPage';
 import { Settings } from '~/components/SettingsPage/types';
 import { isAppDataV1 } from './helpers';
 import type { AppDataV1 } from './types';
-import test from 'node:test';
 
 const appId = 'blocka';
 
@@ -28,7 +27,7 @@ const testGameData: AppDataV1 = {
       [1, 0, 0, 1, 1, 0, 1, 0, 0, 1],
       [0, 1, 1, 0, 1, 1, 0, 1, 1, 1]
     ],
-    highScore: 0,
+    highScore: 123456,
     piecesUsed: [false, false, false],
     score: 0,
     seed: 12345

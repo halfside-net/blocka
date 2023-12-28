@@ -1,4 +1,5 @@
 import './index.scss';
+import { ReactComponent as TrophySVG } from '~/assets/images/trophy.svg';
 import { mulberry32Generator } from '~/ts/helpers';
 import Board from '~/components/Board';
 import Piece from '~/components/Piece';
@@ -22,17 +23,15 @@ export default function Game(props: {
       <div className="Game-header">
         <div className="Game-scores">
           <div className="Game-score Game-score--current">
-            <span className="Game-scoreLabel">
-              Score:{' '}
-            </span>
             <span className="Game-scoreValue">
               {props.gameData?.score ?? 0}
             </span>
           </div>
           <div className="Game-score Game-score--best">
-            <span className="Game-scoreLabel">
-              Best:{' '}
-            </span>
+            <TrophySVG
+              className="Game-scoreIcon"
+              title="High Score"
+            />
             <span className="Game-scoreValue">
               {props.gameData?.highScore ?? 0}
             </span>

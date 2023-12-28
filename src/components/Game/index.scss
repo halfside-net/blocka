@@ -19,6 +19,7 @@
 
   &-scores {
     display: grid;
+    padding: 0 $Game-scores-padding-side;
     grid-template-columns: 1fr 1fr;
     gap: $Game-header-gap;
   }
@@ -29,7 +30,7 @@
     border-radius: $Game-score-border-radius;
     background-color: $Game-score-background-color;
     padding: $Game-score-padding;
-    justify-content: space-between;
+    justify-content: flex-end;
     line-height: $Game-score-line-height;
     color: $Game-score-color;
     font-size: $Game-score-font-size;
@@ -37,13 +38,21 @@
     white-space: pre;
   }
 
+  &-scoreIcon {
+    margin-right: auto;
+    height: $Game-score-line-height * $Game-score-font-size;
+  }
+
   &-main {
+    $total-main-fixed-vertical-space: $Game-padding-top + 2 * $Game-score-padding-vertical + $Game-score-line-height * $Game-score-font-size + $Game-header-gap + $Game-pieces-gap + $Game-padding-bottom;
+
     display: flex;
     align-self: center;
     width: 100%;
     flex-grow: 1;
     flex-direction: column;
-    max-width: calc((100vh - #{$Game-padding-top + 2 * $Game-score-padding-vertical + $Game-score-line-height * $Game-score-font-size + $Game-header-gap + $Game-pieces-gap + $Game-padding-bottom - $Game-pieces-gap} - #{$Game-pieces-gap} / var(--num-pieces)) / (1 + 1 / var(--num-pieces)));
+    max-width: calc((100vh - #{$total-main-fixed-vertical-space - $Game-pieces-gap} - #{$Game-pieces-gap} / var(--num-pieces)) / (1 + 1 / var(--num-pieces)));
+    max-width: calc((100svh - #{$total-main-fixed-vertical-space - $Game-pieces-gap} - #{$Game-pieces-gap} / var(--num-pieces)) / (1 + 1 / var(--num-pieces))); // Use svh if supported to fix iOS Safari
   }
 
   &-board {

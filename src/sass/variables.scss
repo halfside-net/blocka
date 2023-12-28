@@ -92,7 +92,7 @@ $Block-shadow: $shadow-raised;
 $Game-header-gap: 16px;
 $Game-padding-bottom: 2 * $container-padding;
 $Game-padding-side: $container-padding;
-$Game-padding-top: $header-height + $container-padding;
+$Game-padding-top: $container-padding;
 $Game-pieces-background: $board-background-color;
 $Game-pieces-border-radius: $border-radius-default;
 $Game-pieces-gap: 16px;
@@ -101,11 +101,12 @@ $Game-score-background-color: $theme-color-dark;
 $Game-score-border-radius: $border-radius-default;
 $Game-score-shadow: $shadow-inset-default;
 $Game-score-color: $theme-color-light;
-$Game-score-font-size: 24px;
+$Game-score-font-size: 16px;
 $Game-score-font-weight: bold;
 $Game-score-line-height: 1.2;
 $Game-score-padding-side: 12px;
 $Game-score-padding-vertical: 8px;
+$Game-scores-padding-side: $header-height;
 
 $Game-score-padding: $Game-score-padding-vertical $Game-score-padding-side;
 
