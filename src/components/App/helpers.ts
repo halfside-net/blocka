@@ -5,16 +5,9 @@ export function isAppDataV1(obj: any): obj is AppDataV1 {
     && 'version' in obj
     && Object.entries(obj).every(([key, value]) => {
       switch (key) {
-        case 'activeLevelId':
-          return typeof value === 'string';
-        case 'levelData':
-          return value
-            && typeof value === 'object'
-            && Object.values(value).every(levelData =>
-              levelData
-                && typeof levelData == 'object'
-                && Object.values(levelData).every(levelDataValue => typeof levelDataValue === 'string')
-            );
+        case 'gameData':
+          // TODO: check GameData properties
+          return value && typeof value === 'object';
         case 'settings':
           return value && typeof value === 'object';
         case 'version':

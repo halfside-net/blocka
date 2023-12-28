@@ -1,16 +1,16 @@
 import './index.scss';
+import { mulberry32Generator } from '~/ts/helpers';
 import Board from '~/components/Board';
+import Piece from '~/components/Piece';
+import { boardHeight, boardWidth, numPieces, piecePool } from './constants';
 import type { GameData } from './types';
-import Piece from '../Piece';
-
-const boardHeight = 10;
-const boardWidth = 10;
-const numPieces = 3;
 
 export default function Game(props: {
-  gameData?: GameData;
+  gameData: GameData;
   onSave: (savedData: GameData) => void;
 }) {
+  const rng = mulberry32Generator(props.gameData.seed, 91661749);
+
   return (
     <div className="Game">
       <div className="Game-header">
@@ -46,7 +46,9 @@ export default function Game(props: {
             key={i}
           >
             {!props.gameData?.piecesUsed?.[i] && (
-              <Piece />
+              <Piece
+                pieceData={piecePool[Math.floor(rng() * piecePool.length)]}
+              />
             )}
           </div>
         )}

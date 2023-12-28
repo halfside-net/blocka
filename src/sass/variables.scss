@@ -15,6 +15,7 @@ $white: #fff;
 
 $border-radius-default: 8px;
 $block-border-radius: 4px;
+$block-gap-to-size-ratio: 0.05;
 $container-padding: 16px;
 $header-height: 54px;
 $page-background: $oak;
@@ -79,7 +80,6 @@ $Board-shadow: $shadow-default;
 $Board-shadow-inset: $shadow-inset-default;
 $Board-cell-border-radius: $block-border-radius;
 $Board-divider-color: $chestnut;
-$Board-divider-width-to-block-size-ratio: 0.05;
 $Board-padding-to-block-size-ratio: 0.2;
 
 // Block

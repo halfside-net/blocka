@@ -61,7 +61,9 @@ async function loadData(): Promise<AppDataV1> {
 
 export default function App() {
   const [isLoaded, setIsLoaded] = useState(false);
-  const [gameData, setGameData] = useState<GameData>({});
+  const [gameData, setGameData] = useState<GameData>({
+    seed: Math.random(),
+  });
   const [settings, setSettings] = useState<Settings>({});
   const [viewHome, setViewHome] = useState(true);
   const [viewSettings, setViewSettings] = useState(false);

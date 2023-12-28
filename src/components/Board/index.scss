@@ -3,8 +3,8 @@
 /** @define Board */
 
 .Board {
-  --board-dbr: #{$Board-divider-width-to-block-size-ratio};
-  --board-pbr: #{$Board-padding-to-block-size-ratio};
+  --board-dbr: #{$block-gap-to-size-ratio}; // Ratio of board divider size to block size
+  --board-pbr: #{$Board-padding-to-block-size-ratio}; // Ratio of board padding to block size
 
   box-shadow: $Board-shadow-inset;
   border-radius: $Board-border-radius;

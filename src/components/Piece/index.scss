@@ -3,5 +3,7 @@
 /** @define Piece */
 
 .Piece {
-  // TODO
+  --piece-dbr: #{$block-gap-to-size-ratio}; // Ratio of gap between blocks in piece to block size
+
+  display: grid;
 }
