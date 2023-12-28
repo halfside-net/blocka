@@ -3,9 +3,10 @@
 /** @define Piece */
 
 .Piece {
-  --piece-dbr: #{$block-gap-to-size-ratio}; // Ratio of gap between blocks in piece to block size
+  --piece-gbr: #{$block-gap-to-size-ratio}; // Ratio of gap between blocks in piece to block size
 
   display: grid;
   height: 100%;
   width: 100%;
+  gap: calc(100% / (var(--piece-grid-size) * #{1 + 1 / $block-gap-to-size-ratio} - 1));
 }

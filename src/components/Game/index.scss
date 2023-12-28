@@ -77,6 +77,9 @@
     flex-grow: 1;
     border-radius: $Game-pieces-border-radius;
     background: $Game-pieces-background;
+  }
+
+  &-piece {
     padding: $Game-pieces-padding;
   }
 }

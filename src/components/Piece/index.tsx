@@ -4,6 +4,7 @@ import { BlockType } from '~/components/Block/types';
 import type { PieceData } from './types';
 
 export default function Piece(props: {
+  className?: string;
   gridSize?: number;
   pieceData: PieceData;
 }) {
@@ -21,8 +22,9 @@ export default function Piece(props: {
 
   return (
     <div
-      className="Piece"
+      className={`Piece ${props.className ?? ''}`}
       style={{
+        ['--piece-grid-size' as string]: gridSize,
         gridTemplate: `${gridRows} / ${gridCols}`
       }}
     >
