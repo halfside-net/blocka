@@ -53,11 +53,13 @@ export default function Game(props: {
               key={i}
             >
               {!props.gameData?.piecesUsed?.[i] && (
-                <Piece
-                  className="Game-piece"
-                  gridSize={maxPieceSize}
-                  pieceData={piecePool[Math.floor(rng() * piecePool.length)]}
-                />
+                <div className="Game-pieceWrapper">
+                  <Piece
+                    className="Game-piece"
+                    gridSize={maxPieceSize}
+                    pieceData={piecePool[Math.floor(rng() * piecePool.length)]}
+                  />
+                </div>
               )}
             </div>
           )}

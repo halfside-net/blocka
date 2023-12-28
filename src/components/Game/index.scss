@@ -71,15 +71,20 @@
   }
 
   &-pieceSlot {
+    display: flex;
     box-shadow: $Game-pieces-shadow;
     width: 0;
     aspect-ratio: 1;
     flex-grow: 1;
     border-radius: $Game-pieces-border-radius;
     background: $Game-pieces-background;
+    padding: $Game-pieces-padding;
   }
 
-  &-piece {
-    padding: $Game-pieces-padding;
+  &-pieceWrapper {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
   }
 }

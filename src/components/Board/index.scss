@@ -1,3 +1,4 @@
+@use 'sass:math';
 @import '~/sass/common.scss';
 
 /** @define Board */
@@ -14,9 +15,9 @@
     height: 100%;
     width: 100%;
     background-color: $Board-divider-color;
-    padding: calc(100% / (1 + var(--board-size) * #{1 + 1 / $block-gap-to-size-ratio}));
+    padding: calc(100% / (1 + var(--board-size) * #{1 + math.div(1, $block-gap-to-size-ratio)}));
     grid-template-columns: repeat(var(--board-size), 1fr);
-    gap: calc(100% / (1 + var(--board-size) * #{1 + 1 / $block-gap-to-size-ratio}));
+    gap: calc(100% / (1 + var(--board-size) * #{1 + math.div(1, $block-gap-to-size-ratio)}));
   }
 
   &-cell {

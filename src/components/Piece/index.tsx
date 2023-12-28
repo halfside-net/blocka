@@ -15,26 +15,21 @@ export default function Piece(props: {
   );
 
   const gridSize = props.gridSize ?? Math.max(numRows, numCols);
-  const gridRows = gridSize % 2 == numRows % 2 ? `repeat(${gridSize}, 1fr)` : `0.5fr repeat(${gridSize - 1}, 1fr) 0.5fr`;
-  const gridCols = gridSize % 2 == numCols % 2 ? `repeat(${gridSize}, 1fr)` : `0.5fr repeat(${gridSize - 1}, 1fr) 0.5fr`;
-  const rowStart = Math.ceil((gridSize - numRows) / 2) + 1;
-  const colStart = Math.ceil((gridSize - numCols) / 2) + 1;
 
   return (
     <div
       className={`Piece ${props.className ?? ''}`}
       style={{
-        ['--piece-grid-size' as string]: gridSize,
-        gridTemplate: `${gridRows} / ${gridCols}`
+        gap: `calc(100% * var(--piece-gbr) / (${numRows} + ${numRows - 1} * var(--piece-gbr))) calc(100% * var(--piece-gbr) / (${numCols} + ${numCols - 1} * var(--piece-gbr)))`,
+        gridTemplate: `repeat(${numRows}, 1fr) / repeat(${numCols}, 1fr)`,
+        height: `calc(100% * (${numRows} + ${numRows - 1} * var(--piece-gbr)) / (${gridSize} + ${gridSize - 1} * var(--piece-gbr)))`,
+        width: `calc(100% * (${numCols} + ${numCols - 1} * var(--piece-gbr)) / (${gridSize} + ${gridSize - 1} * var(--piece-gbr)))`,
       }}
     >
       {pieceData.map((row, rowNum) => row.map((blockType, colNum) => (
         <div
           className="Piece-cell"
           key={`${rowNum},${colNum}`}
-          style={{
-            gridArea: `${rowStart + rowNum} / ${colStart + colNum}`
-          }}
         >
           <Block
             type={blockType}
