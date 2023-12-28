@@ -43,18 +43,6 @@
     width: 100%;
     flex-grow: 1;
     flex-direction: column;
-    // w = 100vh - c - (w - (numPieces - 1) * piecesGap) / numPieces
-    // w = 100vh - c - (w - (numPieces * piecesGap - piecesGap)) / numPieces
-    // w = 100vh - c - (w - numPieces * piecesGap + piecesGap) / numPieces
-    // w = 100vh - c - (w / numPieces - piecesGap + piecesGap / numPieces)
-    // w = 100vh - c - (w / numPieces + piecesGap / numPieces - piecesGap)
-    // w = 100vh - c - (w / numPieces + piecesGap * (1 / numPieces - 1))
-    // w = 100vh - c - w / numPieces + piecesGap * (1 - 1 / numPieces)
-    // w + w / numPieces = 100vh - c + piecesGap * (1 - 1 / numPieces)
-    // w * (1 + 1 / numPieces) = 100vh - c + piecesGap * (1 - 1 / numPieces)
-    // w = (100vh - c + piecesGap * (1 - 1 / numPieces)) / (1 + 1 / numPieces)
-    // w = (100vh - c + piecesGap - piecesGap / numPieces) / (1 + 1 / numPieces)
-    // w = (100vh - (c - piecesGap) - piecesGap / numPieces) / (1 + 1 / numPieces)
     max-width: calc((100vh - #{$Game-padding-top + 2 * $Game-score-padding-vertical + $Game-score-line-height * $Game-score-font-size + $Game-header-gap + $Game-pieces-gap + $Game-padding-bottom - $Game-pieces-gap} - #{$Game-pieces-gap} / var(--num-pieces)) / (1 + 1 / var(--num-pieces)));
   }
 
