@@ -19,10 +19,15 @@ $container-padding: 16px;
 $header-height: 54px;
 $page-background: $oak;
 $shadow-blur-default: 2px;
+$shadow-blur-raised: 2px;
 $shadow-color-default: #0007;
+$shadow-color-raised: #0003;
 $shadow-offset-x-default: 0;
+$shadow-offset-x-raised: 0;
 $shadow-offset-y-default: 1px;
+$shadow-offset-y-raised: -1px;
 $shadow-spread-default: 2px;
+$shadow-spread-raised: 1.5px;
 $theme-color-dark: $mahogany;
 $theme-color-light: $birch;
 
@@ -34,6 +39,12 @@ $shadow-default:
   $shadow-blur-default
   $shadow-spread-default
   $shadow-color-default;
+$shadow-raised: inset
+  $shadow-offset-x-raised
+  $shadow-offset-y-raised
+  $shadow-blur-raised
+  $shadow-spread-raised
+  $shadow-color-raised;
 
 $shadow-inset-default: inset $shadow-default;
 
@@ -74,6 +85,7 @@ $Board-padding-to-block-size-ratio: 0.2;
 // Block
 
 $Block-background-normal: $theme-color-light;
+$Block-shadow: $shadow-raised;
 
 // Game
 

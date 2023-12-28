@@ -3,7 +3,12 @@
 /** @define Block */
 
 .Block {
+  border-radius: $block-border-radius;
+  height: 100%;
+  width: 100%;
+
   &--normal {
+    box-shadow: $Block-shadow;
     background: $Block-background-normal;
   }
 }

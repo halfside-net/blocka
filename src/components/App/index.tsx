@@ -9,10 +9,38 @@ import SettingsPage from '~/components/SettingsPage';
 import { Settings } from '~/components/SettingsPage/types';
 import { isAppDataV1 } from './helpers';
 import type { AppDataV1 } from './types';
+import test from 'node:test';
 
 const appId = 'blocka';
 
+// TODO: Remove this
+const testGameData: AppDataV1 = {
+  gameData: {
+    boardState: [
+      [0, 1, 1, 0, 1, 0, 0, 1, 0, 1],
+      [1, 0, 1, 0, 0, 1, 0, 0, 1, 1],
+      [0, 1, 0, 1, 0, 0, 1, 0, 1, 0],
+      [1, 0, 1, 0, 0, 1, 0, 1, 1, 0],
+      [0, 1, 0, 1, 1, 1, 0, 0, 1, 0],
+      [1, 0, 0, 1, 0, 1, 0, 1, 1, 0],
+      [0, 1, 1, 0, 1, 0, 0, 0, 0, 1],
+      [1, 0, 0, 1, 0, 0, 1, 1, 1, 0],
+      [1, 0, 0, 1, 1, 0, 1, 0, 0, 1],
+      [0, 1, 1, 0, 1, 1, 0, 1, 1, 1]
+    ],
+    highScore: 0,
+    piecesUsed: [false, false, false],
+    score: 0,
+    seed: 12345
+  },
+  version: 1
+};
+
 async function loadData(): Promise<AppDataV1> {
+  // TODO: Remove this
+  return testGameData;
+
+/*
   const jsonData = window.localStorage.getItem(appId);
 
   if (jsonData) {
@@ -28,6 +56,7 @@ async function loadData(): Promise<AppDataV1> {
   return {
     version: 1
   };
+*/
 }
 
 export default function App() {
