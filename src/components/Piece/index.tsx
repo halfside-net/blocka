@@ -4,6 +4,7 @@ import { BlockType } from '~/components/Block/types';
 import type { PieceData } from './types';
 
 export default function Piece(props: {
+  gridSize?: number;
   pieceData: PieceData;
 }) {
   const numRows = props.pieceData.length;
@@ -12,19 +13,26 @@ export default function Piece(props: {
     Array.from({ length: numCols }, (_, col) => props.pieceData[row][col] ?? BlockType.EMPTY)
   );
 
+  const gridSize = props.gridSize ?? Math.max(numRows, numCols);
+  const gridRows = gridSize % 2 == numRows % 2 ? `repeat(${gridSize}, 1fr)` : `0.5fr repeat(${gridSize - 1}, 1fr) 0.5fr`;
+  const gridCols = gridSize % 2 == numCols % 2 ? `repeat(${gridSize}, 1fr)` : `0.5fr repeat(${gridSize - 1}, 1fr) 0.5fr`;
+  const rowStart = Math.ceil((gridSize - numRows) / 2) + 1;
+  const colStart = Math.ceil((gridSize - numCols) / 2) + 1;
+
   return (
     <div
       className="Piece"
       style={{
-        aspectRatio: `calc(${numCols} + ${numCols - 1} * var(--piece-dbr)) / calc(${numRows} + ${numRows - 1} * var(--piece-dbr))`,
-        gridTemplateColumns: `repeat(${pieceData[0].length}, 1fr)`,
-        [numRows > numCols ? 'height' : 'width']: '100%'
+        gridTemplate: `${gridRows} / ${gridCols}`
       }}
     >
       {pieceData.map((row, rowNum) => row.map((blockType, colNum) => (
         <div
           className="Piece-cell"
           key={`${rowNum},${colNum}`}
+          style={{
+            gridArea: `${rowStart + rowNum} / ${colStart + colNum}`
+          }}
         >
           <Block
             type={blockType}

@@ -6,6 +6,8 @@ import Piece from '~/components/Piece';
 import { boardSize, numPieces, piecePool } from './constants';
 import type { GameData } from './types';
 
+const maxPieceSize = Math.max(...piecePool.map(pieceData => Math.max(pieceData.length, ...pieceData.map(row => row.length))));
+
 export default function Game(props: {
   gameData: GameData;
   onSave: (savedData: GameData) => void;
@@ -52,6 +54,7 @@ export default function Game(props: {
             >
               {!props.gameData?.piecesUsed?.[i] && (
                 <Piece
+                  gridSize={maxPieceSize}
                   pieceData={piecePool[Math.floor(rng() * piecePool.length)]}
                 />
               )}

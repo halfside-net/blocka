@@ -50,10 +50,11 @@
     display: flex;
     align-self: center;
     width: 100%;
-    flex-grow: 1;
-    flex-direction: column;
     max-width: calc((100vh - #{$total-main-fixed-vertical-space - $Game-pieces-gap} - #{$Game-pieces-gap} / var(--num-pieces)) / (1 + 1 / var(--num-pieces)));
     max-width: calc((100svh - #{$total-main-fixed-vertical-space - $Game-pieces-gap} - #{$Game-pieces-gap} / var(--num-pieces)) / (1 + 1 / var(--num-pieces))); // Use svh if supported to fix iOS Safari
+    flex-grow: 1;
+    flex-direction: column;
+    justify-content: center;
   }
 
   &-board {
@@ -70,14 +71,12 @@
   }
 
   &-pieceSlot {
-    display: flex;
     box-shadow: $Game-pieces-shadow;
     width: 0;
-    flex-grow: 1;
     aspect-ratio: 1;
+    flex-grow: 1;
     border-radius: $Game-pieces-border-radius;
     background: $Game-pieces-background;
-    justify-content: center;
-    align-items: center;
+    padding: $Game-pieces-padding;
   }
 }
