@@ -20,7 +20,7 @@ export default function Piece(props: {
     <div
       className={`Piece ${props.className ?? ''}`}
       style={{
-        gap: `calc(100% * var(--piece-gbr) / (${numRows} + ${numRows - 1} * var(--piece-gbr))) calc(100% * var(--piece-gbr) / (${numCols} + ${numCols - 1} * var(--piece-gbr)))`,
+        gap: `calc(100% / (${numRows} / var(--piece-gbr) + ${numRows - 1})) calc(100% / (${numCols} / var(--piece-gbr) + ${numCols - 1}))`,
         gridTemplate: `repeat(${numRows}, 1fr) / repeat(${numCols}, 1fr)`,
         height: `calc(100% * (${numRows} + ${numRows - 1} * var(--piece-gbr)) / (${gridSize} + ${gridSize - 1} * var(--piece-gbr)))`,
         width: `calc(100% * (${numCols} + ${numCols - 1} * var(--piece-gbr)) / (${gridSize} + ${gridSize - 1} * var(--piece-gbr)))`,
