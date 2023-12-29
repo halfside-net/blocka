@@ -1,4 +1,5 @@
 import './index.scss';
+import { DndContext, useDraggable } from '@dnd-kit/core';
 import { ReactComponent as TrophySVG } from '~/assets/images/trophy.svg';
 import { mulberry32Generator } from '~/ts/helpers';
 import Board from '~/components/Board';
@@ -8,10 +9,12 @@ import type { GameData } from './types';
 
 const maxPieceSize = Math.max(...piecePool.map(pieceData => Math.max(pieceData.length, ...pieceData.map(row => row.length))));
 
-export default function Game(props: {
+type GameProps = {
   gameData: GameData;
   onSave: (savedData: GameData) => void;
-}) {
+}
+
+function GameInternal(props: GameProps) {
   const rng = props.gameData.seed ? mulberry32Generator(props.gameData.seed, 91661749) : null;
 
   return (
@@ -47,24 +50,41 @@ export default function Game(props: {
           state={props.gameData?.boardState}
         />
         <div className="Game-pieces">
-          {Array.from({ length: numPieces }, (_, i) =>
-            <div
-              className="Game-pieceSlot"
-              key={i}
-            >
-              {rng && !props.gameData?.piecesUsed?.[i] && (
-                <div className="Game-pieceWrapper">
-                  <Piece
-                    className="Game-piece"
-                    gridSize={maxPieceSize}
-                    pieceData={piecePool[Math.floor(rng() * piecePool.length)]}
-                  />
-                </div>
-              )}
-            </div>
-          )}
+          {Array.from({ length: numPieces }, (_, i) => {
+            const { attributes, listeners, setNodeRef, transform } = useDraggable({
+              id: `piece-${i}`,
+            });
+
+            return (
+              <div
+                className="Game-pieceSlot"
+                key={i}
+              >
+                {rng && !props.gameData?.piecesUsed?.[i] && (
+                  <div className="Game-pieceWrapper">
+                    <Piece
+                      additionalProperties={{...attributes, ...listeners}}
+                      className="Game-piece"
+                      gridSize={maxPieceSize}
+                      pieceData={piecePool[Math.floor(rng() * piecePool.length)]}
+                      setRef={setNodeRef}
+                      transform={transform ? `translate(${transform.x}px, ${transform.y}px)` : undefined}
+                    />
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>
+  );
+}
+
+export default function Game(props: GameProps) {
+  return (
+    <DndContext>
+      <GameInternal {...props} />
+    </DndContext>
   );
 }

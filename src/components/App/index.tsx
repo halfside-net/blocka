@@ -39,7 +39,7 @@ const testGameData: AppDataV1 = {
 
 async function loadData(): Promise<AppDataV1> {
   // TODO: Remove this
-  return testGameData;
+  // return testGameData;
 
   const jsonData = window.localStorage.getItem(appId);
 
