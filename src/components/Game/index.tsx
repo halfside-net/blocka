@@ -1,5 +1,6 @@
 import './index.scss';
 import { DndContext, useDraggable } from '@dnd-kit/core';
+import { useRef } from 'react';
 import { ReactComponent as TrophySVG } from '~/assets/images/trophy.svg';
 import { mulberry32Generator } from '~/ts/helpers';
 import Board from '~/components/Board';
@@ -16,6 +17,8 @@ type GameProps = {
 
 function GameInternal(props: GameProps) {
   const rng = props.gameData.seed ? mulberry32Generator(props.gameData.seed, 91661749) : null;
+
+  const boardCellRef = useRef<HTMLDivElement>(null);
 
   return (
     <div
@@ -45,30 +48,40 @@ function GameInternal(props: GameProps) {
       </div>
       <div className="Game-main">
         <Board
+          cellRef={boardCellRef}
           className="Game-board"
           size={boardSize}
           state={props.gameData?.boardState}
         />
         <div className="Game-pieces">
           {Array.from({ length: numPieces }, (_, i) => {
+            const pieceData = rng ? piecePool[Math.floor(rng() * piecePool.length)] : null;
             const { attributes, listeners, setNodeRef, transform } = useDraggable({
-              id: `piece-${i}`,
+              attributes: {
+                roleDescription: 'Draggable piece'
+              },
+              data: {
+                pieceData
+              },
+              id: `piece-${i}`
             });
+            const pieceCellRef = useRef<HTMLDivElement>(null);
 
             return (
               <div
                 className="Game-pieceSlot"
                 key={i}
               >
-                {rng && !props.gameData?.piecesUsed?.[i] && (
+                {!props.gameData?.piecesUsed?.[i] && pieceData && (
                   <div className="Game-pieceWrapper">
                     <Piece
                       additionalProperties={{...attributes, ...listeners}}
+                      cellRef={pieceCellRef}
                       className="Game-piece"
                       gridSize={maxPieceSize}
-                      pieceData={piecePool[Math.floor(rng() * piecePool.length)]}
+                      pieceData={pieceData}
                       setRef={setNodeRef}
-                      transform={transform ? `translate(${transform.x}px, ${transform.y}px)` : undefined}
+                      transform={transform ? `translate(${transform.x}px, ${transform.y}px) scale(${boardCellRef.current && pieceCellRef.current ? boardCellRef.current.offsetHeight / pieceCellRef.current.offsetHeight : 1})` : undefined}
                     />
                   </div>
                 )}

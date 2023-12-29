@@ -5,6 +5,7 @@ import { BlockType } from '~/components/Block/types';
 import type { BoardState } from './types';
 
 export default function Board(props: {
+  cellRef?: React.RefObject<HTMLDivElement>; // Reference to the first cell on the board
   className?: string;
   size: number;
   state?: BoardState;
@@ -28,6 +29,7 @@ export default function Board(props: {
           <div
             className="Board-cell"
             key={`${rowNum},${colNum}`}
+            ref={rowNum == 0 && colNum == 0 ? props.cellRef : undefined}
           >
             <Block
               type={blockType}

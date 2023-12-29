@@ -5,6 +5,7 @@ import type { PieceData } from './types';
 
 export default function Piece(props: {
   additionalProperties?: Record<string, unknown>;
+  cellRef?: React.RefObject<HTMLDivElement>; // Reference to the first cell in the piece
   className?: string;
   gridSize?: number;
   pieceData: PieceData;
@@ -36,6 +37,7 @@ export default function Piece(props: {
         <div
           className="Piece-cell"
           key={`${rowNum},${colNum}`}
+          ref={rowNum == 0 && colNum == 0 ? props.cellRef : undefined}
         >
           <Block
             type={blockType}
