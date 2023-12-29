@@ -1,5 +1,13 @@
 import type { PieceData } from "~/components/Piece/types";
 import { BlockType } from "../Block/types";
+import { GameData } from "./types";
+
+export function newGameData(data?: GameData): GameData {
+  return {
+    highScore: data?.highScore,
+    seed: Math.floor(Math.random() * 4294967296)
+  };
+}
 
 /**
  * Rotate a piece clockwise.

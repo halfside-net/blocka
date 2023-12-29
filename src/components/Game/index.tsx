@@ -12,7 +12,7 @@ export default function Game(props: {
   gameData: GameData;
   onSave: (savedData: GameData) => void;
 }) {
-  const rng = mulberry32Generator(props.gameData.seed, 91661749);
+  const rng = props.gameData.seed ? mulberry32Generator(props.gameData.seed, 91661749) : null;
 
   return (
     <div
@@ -52,7 +52,7 @@ export default function Game(props: {
               className="Game-pieceSlot"
               key={i}
             >
-              {!props.gameData?.piecesUsed?.[i] && (
+              {rng && !props.gameData?.piecesUsed?.[i] && (
                 <div className="Game-pieceWrapper">
                   <Piece
                     className="Game-piece"

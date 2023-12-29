@@ -5,6 +5,7 @@ import { ReactComponent as HomeSVG } from '~/assets/images/home.svg';
 import { ReactComponent as SettingsSVG } from '~/assets/images/settings.svg';
 import Home from '~/components/Home';
 import Game from '~/components/Game';
+import { newGameData } from '~/components/Game/helpers';
 import { GameData } from '~/components/Game/types';
 import SettingsPage from '~/components/SettingsPage';
 import { Settings } from '~/components/SettingsPage/types';
@@ -30,7 +31,7 @@ const testGameData: AppDataV1 = {
     ],
     highScore: 1234567,
     piecesUsed: [false, false, false],
-    score: 0,
+    score: 123,
     seed: 12345
   },
   version: 1
@@ -38,7 +39,7 @@ const testGameData: AppDataV1 = {
 
 async function loadData(): Promise<AppDataV1> {
   // TODO: Remove this
-  // return testGameData;
+  return testGameData;
 
   const jsonData = window.localStorage.getItem(appId);
 
@@ -59,9 +60,7 @@ async function loadData(): Promise<AppDataV1> {
 
 export default function App() {
   const [isLoaded, setIsLoaded] = useState(false);
-  const [gameData, setGameData] = useState<GameData>({
-    seed: Math.random(),
-  });
+  const [gameData, setGameData] = useState<GameData>({});
   const [settings, setSettings] = useState<Settings>({});
   const [viewHome, setViewHome] = useState(true);
   const [viewSettings, setViewSettings] = useState(false);
@@ -131,7 +130,13 @@ export default function App() {
 
       <div className="App-home">
         <Home
-          onPlay={isLoaded ? () => setViewHome(false) : undefined}
+          onNewGame={isLoaded ? () => {
+            if (!gameData.score || window.confirm('End your current game and start a new one?')) {
+              setGameData(newGameData(gameData));
+              setViewHome(false);
+            }
+          } : undefined}
+          onPlay={isLoaded && gameData.score ? () => setViewHome(false) : undefined}
         />
       </div>
       <div

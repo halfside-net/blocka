@@ -1,6 +1,6 @@
 /**
  * Seeded random number generator function using mulberry32: https://github.com/cprosche/mulberry32
- * @param seed
+ * @param seed An unsigned 32-bit integer seed
  * @param salt A salt to add to the seed. Pass in a different number literal in each place you call this function!
  * @yields A random number between 0 and 1
  */

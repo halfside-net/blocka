@@ -5,5 +5,5 @@ export interface GameData {
   highScore?: number;
   piecesUsed?: boolean[];
   score?: number;
-  seed: number;
+  seed?: number;
 }

@@ -23,6 +23,12 @@
     object-fit: contain;
   }
 
+  &-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: $Home-button-gap;
+  }
+
   &-button {
     @extend %Button;
     @extend %Button--colored;
