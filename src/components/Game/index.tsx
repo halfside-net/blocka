@@ -17,7 +17,7 @@ export default function Game(props: {
 }) {
   const [draggingPieceData, setDraggingPieceData] = useState<PieceData | null>(null);
 
-  const boardCellRef = useRef<HTMLDivElement>(null);
+  const boardCellRef = useRef<HTMLDivElement>();
 
   return (
     <div
@@ -76,7 +76,7 @@ export default function Game(props: {
 }
 
 function GameMain(props: {
-  boardCellRef?: React.RefObject<HTMLDivElement>;
+  boardCellRef?: React.MutableRefObject<HTMLDivElement | undefined>;
   gameData: GameData;
 }) {
   const rng = props.gameData.seed ? mulberry32Generator(props.gameData.seed, 91661749) : null;

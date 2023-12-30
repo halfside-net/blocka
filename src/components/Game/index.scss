@@ -51,10 +51,14 @@
     align-self: center;
     width: 100%;
     max-width: calc((100vh - #{$total-main-fixed-vertical-space - $Game-pieces-gap} - #{$Game-pieces-gap} / var(--num-pieces)) / (1 + 1 / var(--num-pieces)));
-    max-width: calc((100svh - #{$total-main-fixed-vertical-space - $Game-pieces-gap} - #{$Game-pieces-gap} / var(--num-pieces)) / (1 + 1 / var(--num-pieces))); // Use svh if supported to fix iOS Safari
     flex-grow: 1;
     flex-direction: column;
     justify-content: center;
+
+    // Use svh if supported, for browsers with floating address bar
+    @supports(max-width: 100svh) {
+      max-width: calc((100svh - #{$total-main-fixed-vertical-space - $Game-pieces-gap} - #{$Game-pieces-gap} / var(--num-pieces)) / (1 + 1 / var(--num-pieces)));
+    }
   }
 
   &-board {
