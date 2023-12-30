@@ -11,16 +11,10 @@ import type { GameData } from './types';
 
 const maxPieceSize = Math.max(...piecePool.map(pieceData => Math.max(pieceData.length, ...pieceData.map(row => row.length))));
 
-type PieceDragEventData = {
-  pieceData: PieceData;
-};
-
-type GameProps = {
+export default function Game(props: {
   gameData: GameData;
   onSave: (savedData: GameData) => void;
-}
-
-export default function Game(props: GameProps) {
+}) {
   const [draggingPieceData, setDraggingPieceData] = useState<PieceData | null>(null);
 
   const boardCellRef = useRef<HTMLDivElement>(null);
@@ -81,8 +75,9 @@ export default function Game(props: GameProps) {
   );
 }
 
-function GameMain(props: GameProps & {
+function GameMain(props: {
   boardCellRef?: React.RefObject<HTMLDivElement>;
+  gameData: GameData;
 }) {
   const rng = props.gameData.seed ? mulberry32Generator(props.gameData.seed, 91661749) : null;
 
@@ -96,41 +91,50 @@ function GameMain(props: GameProps & {
       />
       <div className="Game-pieces">
         {Array.from({ length: numPieces }, (_, i) => {
-          const pieceData = rng ? piecePool[Math.floor(rng() * piecePool.length)] : null;
-          const { attributes, isDragging, listeners, setActivatorNodeRef, setNodeRef } = useDraggable({
-            attributes: {
-              roleDescription: 'Draggable piece'
-            },
-            data: {
-              pieceData
-            },
-            id: `piece-${i}`
-          });
-
-          return (
-            <div
-              className="Game-pieceSlot"
+          return rng && !props.gameData?.piecesUsed?.[i] && (
+            <GamePieceSlot
+              id={`piece-${i}`}
               key={i}
-            >
-              {!props.gameData?.piecesUsed?.[i] && pieceData && !isDragging && (
-                <div
-                  className="Game-pieceWrapper"
-                  ref={setActivatorNodeRef}
-                  {...attributes}
-                  {...listeners}
-                >
-                  <Piece
-                    className="Game-piece"
-                    gridSize={maxPieceSize}
-                    pieceData={pieceData}
-                    setRef={setNodeRef}
-                  />
-                </div>
-              )}
-            </div>
+              pieceData={piecePool[Math.floor(rng() * piecePool.length)]}
+            />
           );
         })}
       </div>
+    </div>
+  );
+}
+
+function GamePieceSlot(props: {
+  id: string;
+  pieceData: PieceData;
+}) {
+  const { attributes, isDragging, listeners, setActivatorNodeRef, setNodeRef } = useDraggable({
+    attributes: {
+      roleDescription: 'Draggable piece'
+    },
+    data: {
+      pieceData: props.pieceData
+    },
+    id: props.id
+  });
+
+  return (
+    <div className="Game-pieceSlot">
+      {!isDragging && (
+        <div
+          className="Game-pieceWrapper"
+          ref={setActivatorNodeRef}
+          {...attributes}
+          {...listeners}
+        >
+          <Piece
+            className="Game-piece"
+            gridSize={maxPieceSize}
+            pieceData={props.pieceData}
+            setRef={setNodeRef}
+          />
+        </div>
+      )}
     </div>
   );
 }
