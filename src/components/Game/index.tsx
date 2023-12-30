@@ -60,15 +60,14 @@ export default function Game(props: GameProps) {
           {...props}
           boardCellRef={boardCellRef}
         />
-        <DragOverlay>
+        <DragOverlay
+          style={{
+            height: boardCellRef.current?.offsetHeight,
+            width: boardCellRef.current?.offsetWidth
+          }}
+        >
           {draggingPieceData && (
-            <div
-              className="Game-draggingPieceWrapper"
-              style={{
-                height: boardCellRef.current?.offsetHeight,
-                width: boardCellRef.current?.offsetWidth,
-              }}
-            >
+            <div className="Game-draggingPieceWrapper">
               <Piece
                 blockSize={boardCellRef.current?.offsetHeight}
                 className="Game-draggingPiece"
@@ -98,8 +97,7 @@ function GameMain(props: GameProps & {
       <div className="Game-pieces">
         {Array.from({ length: numPieces }, (_, i) => {
           const pieceData = rng ? piecePool[Math.floor(rng() * piecePool.length)] : null;
-          const pieceCellRef = useRef<HTMLDivElement>(null);
-          const { attributes, isDragging, listeners, setActivatorNodeRef, setNodeRef, transform } = useDraggable({
+          const { attributes, isDragging, listeners, setActivatorNodeRef, setNodeRef } = useDraggable({
             attributes: {
               roleDescription: 'Draggable piece'
             },
@@ -122,15 +120,10 @@ function GameMain(props: GameProps & {
                   {...listeners}
                 >
                   <Piece
-                    cellRef={pieceCellRef}
                     className="Game-piece"
                     gridSize={maxPieceSize}
                     pieceData={pieceData}
                     setRef={setNodeRef}
-                    // transform={[
-                    //   transform && `translate(${transform.x}px, ${transform.y}px)`,
-                    //   isDragging && boardCellRef.current && pieceCellRef.current && `scale(${boardCellRef.current.offsetHeight / pieceCellRef.current.offsetHeight})`
-                    // ].filter(Boolean).join(' ')}
                   />
                 </div>
               )}

@@ -90,6 +90,9 @@
 
   &-draggingPieceWrapper {
     position: relative;
+    top: $Game-dragging-piece-offset-top;
+    height: 100%;
+    width: 100%;
   }
 
   &-draggingPiece {

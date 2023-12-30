@@ -5,13 +5,12 @@ import type { PieceData } from './types';
 
 export default function Piece(props: {
   additionalProperties?: Record<string, unknown>;
+  additionalStyles?: React.CSSProperties;
   blockSize ?: number;
-  cellRef?: React.RefObject<HTMLDivElement>; // Reference to the first cell in the piece
   className?: string;
   gridSize?: number;
   pieceData: PieceData;
   setRef?: (ref: HTMLElement | null) => void;
-  transform?: string;
 }) {
   const numRows = props.pieceData.length;
   const numCols = Math.max(...props.pieceData.map(row => row.length));
@@ -27,18 +26,17 @@ export default function Piece(props: {
       className={`Piece ${props.className ?? ''}`}
       ref={props.setRef}
       style={{
+        ...props.additionalStyles,
         gap: `calc(100% / (${numRows} / var(--piece-gbr) + ${numRows - 1})) calc(100% / (${numCols} / var(--piece-gbr) + ${numCols - 1}))`,
         gridTemplate: `repeat(${numRows}, 1fr) / repeat(${numCols}, 1fr)`,
         height: props.blockSize ? `calc(${numRows * props.blockSize}px + ${(numRows - 1) * props.blockSize}px * var(--piece-gbr))` : `calc(100% * (${numRows} + ${numRows - 1} * var(--piece-gbr)) / (${gridSize} + ${gridSize - 1} * var(--piece-gbr)))`,
-        width: props.blockSize ? `calc(${numCols * props.blockSize}px + ${(numCols - 1) * props.blockSize}px * var(--piece-gbr))` : `calc(100% * (${numCols} + ${numCols - 1} * var(--piece-gbr)) / (${gridSize} + ${gridSize - 1} * var(--piece-gbr)))`,
-        transform: props.transform,
+        width: props.blockSize ? `calc(${numCols * props.blockSize}px + ${(numCols - 1) * props.blockSize}px * var(--piece-gbr))` : `calc(100% * (${numCols} + ${numCols - 1} * var(--piece-gbr)) / (${gridSize} + ${gridSize - 1} * var(--piece-gbr)))`
       }}
     >
       {pieceData.map((row, rowNum) => row.map((blockType, colNum) => (
         <div
           className="Piece-cell"
           key={`${rowNum},${colNum}`}
-          ref={rowNum == 0 && colNum == 0 ? props.cellRef : undefined}
         >
           <Block
             type={blockType}
