@@ -26,17 +26,29 @@ export default function Board(props: {
         style={{ outline: isOver ? '2px solid lime' : 'none' }} // TODO: Remove this
       >
         {boardState.map((row, rowNum) => row.map((blockType, colNum) => (
-          <div
-            className="Board-cell"
+          <BoardCell
+            blockType={blockType}
+            cellRef={rowNum === 0 && colNum === 0 ? props.cellRef : undefined}
             key={`${rowNum},${colNum}`}
-            ref={rowNum == 0 && colNum == 0 ? props.cellRef : undefined}
-          >
-            <Block
-              type={blockType}
-            />
-          </div>
+          />
         )))}
       </div>
+    </div>
+  );
+}
+
+function BoardCell(props: {
+  blockType: BlockType;
+  cellRef?: React.RefObject<HTMLDivElement>;
+}) {
+  return (
+    <div
+      className="Board-cell"
+      ref={props.cellRef}
+    >
+      <Block
+        type={props.blockType}
+      />
     </div>
   );
 }
