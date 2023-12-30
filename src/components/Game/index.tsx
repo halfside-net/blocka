@@ -1,22 +1,27 @@
 import './index.scss';
-import { DndContext, useDraggable } from '@dnd-kit/core';
-import { useRef } from 'react';
+import { DndContext, DragOverlay, useDraggable } from '@dnd-kit/core';
+import { useRef, useState } from 'react';
 import { ReactComponent as TrophySVG } from '~/assets/images/trophy.svg';
 import { mulberry32Generator } from '~/ts/helpers';
 import Board from '~/components/Board';
 import Piece from '~/components/Piece';
+import type { PieceData } from '~/components/Piece/types';
 import { boardSize, numPieces, piecePool } from './constants';
 import type { GameData } from './types';
 
 const maxPieceSize = Math.max(...piecePool.map(pieceData => Math.max(pieceData.length, ...pieceData.map(row => row.length))));
+
+type PieceDragEventData = {
+  pieceData: PieceData;
+};
 
 type GameProps = {
   gameData: GameData;
   onSave: (savedData: GameData) => void;
 }
 
-function GameInternal(props: GameProps) {
-  const rng = props.gameData.seed ? mulberry32Generator(props.gameData.seed, 91661749) : null;
+export default function Game(props: GameProps) {
+  const [draggingPieceData, setDraggingPieceData] = useState<PieceData | null>(null);
 
   const boardCellRef = useRef<HTMLDivElement>(null);
 
@@ -46,58 +51,93 @@ function GameInternal(props: GameProps) {
           </div>
         </div>
       </div>
-      <div className="Game-main">
-        <Board
-          cellRef={boardCellRef}
-          className="Game-board"
-          size={boardSize}
-          state={props.gameData?.boardState}
+      <DndContext
+        onDragStart={event => {
+          setDraggingPieceData(event.active.data.current?.pieceData ?? null)
+        }}
+      >
+        <GameMain
+          {...props}
+          boardCellRef={boardCellRef}
         />
-        <div className="Game-pieces">
-          {Array.from({ length: numPieces }, (_, i) => {
-            const pieceData = rng ? piecePool[Math.floor(rng() * piecePool.length)] : null;
-            const { attributes, listeners, setNodeRef, transform } = useDraggable({
-              attributes: {
-                roleDescription: 'Draggable piece'
-              },
-              data: {
-                pieceData
-              },
-              id: `piece-${i}`
-            });
-            const pieceCellRef = useRef<HTMLDivElement>(null);
-
-            return (
-              <div
-                className="Game-pieceSlot"
-                key={i}
-              >
-                {!props.gameData?.piecesUsed?.[i] && pieceData && (
-                  <div className="Game-pieceWrapper">
-                    <Piece
-                      additionalProperties={{...attributes, ...listeners}}
-                      cellRef={pieceCellRef}
-                      className="Game-piece"
-                      gridSize={maxPieceSize}
-                      pieceData={pieceData}
-                      setRef={setNodeRef}
-                      transform={transform ? `translate(${transform.x}px, ${transform.y}px) scale(${boardCellRef.current && pieceCellRef.current ? boardCellRef.current.offsetHeight / pieceCellRef.current.offsetHeight : 1})` : undefined}
-                    />
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      </div>
+        <DragOverlay>
+          {draggingPieceData && (
+            <div
+              className="Game-draggingPieceWrapper"
+              style={{
+                height: boardCellRef.current?.offsetHeight,
+                width: boardCellRef.current?.offsetWidth,
+              }}
+            >
+              <Piece
+                blockSize={boardCellRef.current?.offsetHeight}
+                className="Game-draggingPiece"
+                pieceData={draggingPieceData}
+              />
+            </div>
+          )}
+        </DragOverlay>
+      </DndContext>
     </div>
   );
 }
 
-export default function Game(props: GameProps) {
+function GameMain(props: GameProps & {
+  boardCellRef?: React.RefObject<HTMLDivElement>;
+}) {
+  const rng = props.gameData.seed ? mulberry32Generator(props.gameData.seed, 91661749) : null;
+
   return (
-    <DndContext>
-      <GameInternal {...props} />
-    </DndContext>
+    <div className="Game-main">
+      <Board
+        cellRef={props.boardCellRef}
+        className="Game-board"
+        size={boardSize}
+        state={props.gameData?.boardState}
+      />
+      <div className="Game-pieces">
+        {Array.from({ length: numPieces }, (_, i) => {
+          const pieceData = rng ? piecePool[Math.floor(rng() * piecePool.length)] : null;
+          const pieceCellRef = useRef<HTMLDivElement>(null);
+          const { attributes, isDragging, listeners, setActivatorNodeRef, setNodeRef, transform } = useDraggable({
+            attributes: {
+              roleDescription: 'Draggable piece'
+            },
+            data: {
+              pieceData
+            },
+            id: `piece-${i}`
+          });
+
+          return (
+            <div
+              className="Game-pieceSlot"
+              key={i}
+            >
+              {!props.gameData?.piecesUsed?.[i] && pieceData && !isDragging && (
+                <div
+                  className="Game-pieceWrapper"
+                  ref={setActivatorNodeRef}
+                  {...attributes}
+                  {...listeners}
+                >
+                  <Piece
+                    cellRef={pieceCellRef}
+                    className="Game-piece"
+                    gridSize={maxPieceSize}
+                    pieceData={pieceData}
+                    setRef={setNodeRef}
+                    // transform={[
+                    //   transform && `translate(${transform.x}px, ${transform.y}px)`,
+                    //   isDragging && boardCellRef.current && pieceCellRef.current && `scale(${boardCellRef.current.offsetHeight / pieceCellRef.current.offsetHeight})`
+                    // ].filter(Boolean).join(' ')}
+                  />
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
   );
 }

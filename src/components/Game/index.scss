@@ -87,4 +87,14 @@
     justify-content: center;
     align-items: center;
   }
+
+  &-draggingPieceWrapper {
+    position: relative;
+  }
+
+  &-draggingPiece {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+  }
 }
