@@ -165,7 +165,6 @@ function GameMain(props: {
   gameData: GameData;
 }) {
   const pieces = props.gameData.seed ? getPieces(numPieces, props.gameData.seed) : [];
-  const rng = props.gameData.seed ? mulberry32Generator(props.gameData.seed, 91661749) : null;
 
   return (
     <div className="Game-main">
@@ -179,9 +178,9 @@ function GameMain(props: {
       />
       <div className="Game-pieces">
         {Array.from({ length: numPieces }, (_, i) => {
-          return rng && pieces[i] && (
+          return pieces[i] && (
             <GamePieceSlot
-              id={`piece-${i}-${Math.floor(rng() * 1e8)}`}
+              id={`piece-${i}-${props.gameData.seed}`}
               key={i}
               pieceData={pieces[i]}
               pieceIndex={i}
