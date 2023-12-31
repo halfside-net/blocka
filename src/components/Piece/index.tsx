@@ -27,10 +27,10 @@ export default function Piece(props: {
       ref={props.setRef}
       style={{
         ...props.additionalStyles,
-        gap: `calc(100% / (${numRows} / var(--piece-gbr) + ${numRows - 1})) calc(100% / (${numCols} / var(--piece-gbr) + ${numCols - 1}))`,
+        gap: `calc(100% / (${numRows} / var(--block-gap-ratio) + ${numRows - 1})) calc(100% / (${numCols} / var(--block-gap-ratio) + ${numCols - 1}))`,
         gridTemplate: `repeat(${numRows}, 1fr) / repeat(${numCols}, 1fr)`,
-        height: props.blockSize ? `calc(${numRows * props.blockSize}px + ${(numRows - 1) * props.blockSize}px * var(--piece-gbr))` : `calc(100% * (${numRows} + ${numRows - 1} * var(--piece-gbr)) / (${gridSize} + ${gridSize - 1} * var(--piece-gbr)))`,
-        width: props.blockSize ? `calc(${numCols * props.blockSize}px + ${(numCols - 1) * props.blockSize}px * var(--piece-gbr))` : `calc(100% * (${numCols} + ${numCols - 1} * var(--piece-gbr)) / (${gridSize} + ${gridSize - 1} * var(--piece-gbr)))`
+        height: props.blockSize ? `calc(${numRows * props.blockSize}px + ${(numRows - 1) * props.blockSize}px * var(--block-gap-ratio))` : `calc(100% * (${numRows} + ${numRows - 1} * var(--block-gap-ratio)) / (${gridSize} + ${gridSize - 1} * var(--block-gap-ratio)))`,
+        width: props.blockSize ? `calc(${numCols * props.blockSize}px + ${(numCols - 1) * props.blockSize}px * var(--block-gap-ratio))` : `calc(100% * (${numCols} + ${numCols - 1} * var(--block-gap-ratio)) / (${gridSize} + ${gridSize - 1} * var(--block-gap-ratio)))`
       }}
     >
       {pieceData.map((row, rowNum) => row.map((blockType, colNum) => (

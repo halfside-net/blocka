@@ -22,9 +22,21 @@ export default function Game(props: {
 }) {
   const [activeCell, setActiveCell] = useState<BoardCellData | null>(null);
   const [activePiece, setActivePiece] = useState<PieceData | null>(null);
+  const [activePieceHeight, setActivePieceHeight] = useState<number>(0);
   const [activePieceIndex, setActivePieceIndex] = useState<number | null>(null);
+  const [activePieceWidth, setActivePieceWidth] = useState<number>(0);
 
-  const boardCellRef = useRef<HTMLDivElement>();
+  const boardCellRef = useRef<HTMLElement>();
+
+  const activePieceBlockOffset = activePiece ? (activePiece[0].length - 1) * (boardCellRef.current?.offsetWidth ?? 0) / 2 : 0;
+
+  function clearActivePiece() {
+    setActiveCell(null);
+    setActivePiece(null);
+    setActivePieceHeight(0);
+    setActivePieceIndex(null);
+    setActivePieceWidth(0);
+  }
 
   return (
     <div
@@ -53,6 +65,7 @@ export default function Game(props: {
         </div>
       </div>
       <DndContext
+        onDragCancel={clearActivePiece}
         onDragEnd={event => {
           if (activePiece && event.over?.data.current) {
             const boardState = generateBoardState(boardSize, props.gameData?.boardState);
@@ -118,9 +131,7 @@ export default function Game(props: {
             }
           }
 
-          setActiveCell(null);
-          setActivePiece(null);
-          setActivePieceIndex(null);
+          clearActivePiece();
         }}
         onDragOver={event => setActiveCell(event.over?.data.current ? {
           colNum: event.over.data.current.colNum,
@@ -128,7 +139,9 @@ export default function Game(props: {
         } : null)}
         onDragStart={event => {
           setActivePiece(event.active.data.current?.pieceData ?? null)
+          setActivePieceHeight(event.active.data.current?.pieceHeight ?? 0)
           setActivePieceIndex(event.active.data.current?.pieceIndex ?? null)
+          setActivePieceWidth(event.active.data.current?.pieceWidth ?? 0)
         }}
       >
         <GameMain
@@ -143,8 +156,13 @@ export default function Game(props: {
             width: boardCellRef.current?.offsetWidth
           }}
         >
-          {activePiece && (
-            <div className="Game-activePieceWrapper">
+          {activePiece && boardCellRef.current && (
+            <div
+              className="Game-activePieceWrapper"
+              style={{
+                left: `calc((${activePieceWidth}px - ${boardCellRef.current.offsetWidth}px) / 2 + ${activePieceBlockOffset}px + var(--block-gap-ratio) * ${activePieceBlockOffset}px)`,
+              }}
+            >
               <Piece
                 blockSize={boardCellRef.current?.offsetHeight}
                 className="Game-activePiece"
@@ -160,7 +178,7 @@ export default function Game(props: {
 
 function GameMain(props: {
   activeCell: BoardCellData | null;
-  boardCellRef: React.MutableRefObject<HTMLDivElement | undefined>;
+  boardCellRef: React.MutableRefObject<HTMLElement | undefined>;
   activePiece: PieceData | null;
   gameData: GameData;
 }) {
@@ -199,13 +217,17 @@ function GamePieceSlot(props: {
   pieceIndex: number;
   used?: boolean;
 }) {
+  const pieceRef = useRef<HTMLElement | null>(null);
+
   const { attributes, isDragging, listeners, setActivatorNodeRef, setNodeRef } = useDraggable({
     attributes: {
       roleDescription: 'Draggable piece'
     },
     data: {
       pieceData: props.pieceData,
-      pieceIndex: props.pieceIndex
+      pieceHeight: pieceRef.current?.offsetHeight ?? 0,
+      pieceIndex: props.pieceIndex,
+      pieceWidth: pieceRef.current?.offsetWidth ?? 0
     },
     id: props.id
   });
@@ -223,7 +245,10 @@ function GamePieceSlot(props: {
             className="Game-piece"
             gridSize={maxPieceSize}
             pieceData={props.pieceData}
-            setRef={setNodeRef}
+            setRef={element => {
+              pieceRef.current = element;
+              setNodeRef(element);
+            }}
           />
         </div>
       )}

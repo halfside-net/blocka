@@ -3,6 +3,8 @@
 /** @define Game */
 
 .Game {
+  --block-gap-ratio: #{$block-gap-to-size-ratio}; // Ratio of gap between blocks in piece to block size
+
   display: flex;
   height: 100%;
   width: 100%;
@@ -94,7 +96,7 @@
 
   &-activePieceWrapper {
     position: relative;
-    top: $Game-dragging-piece-offset-top;
+    margin-top: $Game-dragging-piece-offset-top;
     height: 100%;
     width: 100%;
   }

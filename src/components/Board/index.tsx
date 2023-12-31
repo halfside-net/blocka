@@ -8,7 +8,7 @@ import type { BoardCellData, BoardState } from './types';
 
 export default function Board(props: {
   activeCell?: BoardCellData | null;
-  cellRef?: React.MutableRefObject<HTMLDivElement | undefined>; // Reference to the first cell on the board
+  cellRef?: React.MutableRefObject<HTMLElement | undefined>; // Reference to the first cell on the board
   className?: string;
   activePiece?: PieceData | null;
   size: number;
@@ -43,7 +43,7 @@ export default function Board(props: {
 
 function BoardCell(props: {
   blockType: BlockType;
-  cellRef?: React.MutableRefObject<HTMLDivElement | undefined>;
+  cellRef?: React.MutableRefObject<HTMLElement | undefined>;
   colNum: number;
   id: string;
   isPreview?: boolean;
