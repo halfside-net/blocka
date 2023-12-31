@@ -4,6 +4,7 @@ import { useRef, useState } from 'react';
 import { ReactComponent as TrophySVG } from '~/assets/images/trophy.svg';
 import { mulberry32Generator } from '~/ts/helpers';
 import Board from '~/components/Board';
+import { BoardCellData } from '~/components/Board/types';
 import Piece from '~/components/Piece';
 import type { PieceData } from '~/components/Piece/types';
 import { boardSize, numPieces, piecePool } from './constants';
@@ -15,7 +16,8 @@ export default function Game(props: {
   gameData: GameData;
   onSave: (savedData: GameData) => void;
 }) {
-  const [draggingPieceData, setDraggingPieceData] = useState<PieceData | null>(null);
+  const [activeCell, setActiveCell] = useState<BoardCellData | null>(null);
+  const [draggingPiece, setDraggingPiece] = useState<PieceData | null>(null);
 
   const boardCellRef = useRef<HTMLDivElement>();
 
@@ -46,13 +48,20 @@ export default function Game(props: {
         </div>
       </div>
       <DndContext
+        onDragEnd={event => setActiveCell(null)}
+        onDragOver={event => setActiveCell(event.over?.data.current ? {
+          colNum: event.over.data.current.colNum,
+          rowNum: event.over.data.current.rowNum
+        } : null)}
         onDragStart={event => {
-          setDraggingPieceData(event.active.data.current?.pieceData ?? null)
+          setDraggingPiece(event.active.data.current?.pieceData ?? null)
         }}
       >
         <GameMain
-          {...props}
+          activeCell={activeCell}
           boardCellRef={boardCellRef}
+          draggingPiece={draggingPiece}
+          gameData={props.gameData}
         />
         <DragOverlay
           style={{
@@ -60,12 +69,12 @@ export default function Game(props: {
             width: boardCellRef.current?.offsetWidth
           }}
         >
-          {draggingPieceData && (
+          {draggingPiece && (
             <div className="Game-draggingPieceWrapper">
               <Piece
                 blockSize={boardCellRef.current?.offsetHeight}
                 className="Game-draggingPiece"
-                pieceData={draggingPieceData}
+                pieceData={draggingPiece}
               />
             </div>
           )}
@@ -76,7 +85,9 @@ export default function Game(props: {
 }
 
 function GameMain(props: {
-  boardCellRef?: React.MutableRefObject<HTMLDivElement | undefined>;
+  activeCell: BoardCellData | null;
+  boardCellRef: React.MutableRefObject<HTMLDivElement | undefined>;
+  draggingPiece: PieceData | null;
   gameData: GameData;
 }) {
   const rng = props.gameData.seed ? mulberry32Generator(props.gameData.seed, 91661749) : null;
@@ -84,8 +95,10 @@ function GameMain(props: {
   return (
     <div className="Game-main">
       <Board
+        activeCell={props.activeCell}
         cellRef={props.boardCellRef}
         className="Game-board"
+        draggingPiece={props.draggingPiece}
         size={boardSize}
         state={props.gameData?.boardState}
       />

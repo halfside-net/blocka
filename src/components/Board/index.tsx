@@ -2,11 +2,15 @@ import './index.scss';
 import { useDroppable } from '@dnd-kit/core';
 import Block from '~/components/Block';
 import { BlockType } from '~/components/Block/types';
-import type { BoardState } from './types';
+import { PieceData } from '~/components/Piece/types';
+import { getPieceBlockForCell } from './helpers';
+import type { BoardCellData, BoardState } from './types';
 
 export default function Board(props: {
+  activeCell?: BoardCellData | null;
   cellRef?: React.MutableRefObject<HTMLDivElement | undefined>; // Reference to the first cell on the board
   className?: string;
+  draggingPiece?: PieceData | null;
   size: number;
   state?: BoardState;
 }) {
@@ -14,17 +18,29 @@ export default function Board(props: {
     Array.from({ length: props.size }, (_, col) => props.state?.[row]?.[col] ?? BlockType.EMPTY)
   );
 
+  const draggingPieceFits = props.activeCell && props.draggingPiece?.every((row, rowNum) =>
+    row.every((block, colNum) => block == BlockType.EMPTY ||
+      boardState[props.activeCell!.rowNum - props.draggingPiece!.length + 1 + rowNum]?.[props.activeCell!.colNum - row.length + 1 + colNum] == BlockType.EMPTY)
+  );
+
   return (
     <div className={`Board ${props.className ?? ''}`}>
       <div className="Board-grid">
-        {boardState.map((row, rowNum) => row.map((blockType, colNum) => (
-          <BoardCell
-            blockType={blockType}
-            cellRef={rowNum === 0 && colNum === 0 ? props.cellRef : undefined}
-            id={`board-cell-${rowNum}-${colNum}`}
-            key={`${rowNum},${colNum}`}
-          />
-        )))}
+        {boardState.map((row, rowNum) => row.map((blockType, colNum) => {
+          const previewBlock = draggingPieceFits ? getPieceBlockForCell(props.draggingPiece!, props.activeCell!, rowNum, colNum) : undefined;
+
+          return (
+            <BoardCell
+              blockType={previewBlock ?? blockType}
+              cellRef={rowNum === 0 && colNum === 0 ? props.cellRef : undefined}
+              colNum={colNum}
+              id={`board-cell-${rowNum}-${colNum}`}
+              key={`${rowNum},${colNum}`}
+              preview={previewBlock != null}
+              rowNum={rowNum}
+            />
+          );
+        }))}
       </div>
     </div>
   );
@@ -33,10 +49,17 @@ export default function Board(props: {
 function BoardCell(props: {
   blockType: BlockType;
   cellRef?: React.MutableRefObject<HTMLDivElement | undefined>;
+  colNum: number;
   id: string;
+  preview?: boolean;
+  rowNum: number;
 }) {
-  const { isOver, setNodeRef } = useDroppable({
-    id: props.id,
+  const { setNodeRef } = useDroppable({
+    data: {
+      colNum: props.colNum,
+      rowNum: props.rowNum
+    },
+    id: props.id
   });
 
   return (
@@ -50,9 +73,9 @@ function BoardCell(props: {
           props.cellRef.current = element ?? undefined;
         }
       }}
-      style={{ outline: isOver ? '2px solid lime' : 'none' }} // TODO: Remove this
     >
       <Block
+        preview={props.preview}
         type={props.blockType}
       />
     </div>

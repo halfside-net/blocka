@@ -11,4 +11,8 @@
     box-shadow: $Block-shadow;
     background: $Block-background-normal;
   }
+
+  &--preview {
+    opacity: 0.5;
+  }
 }
