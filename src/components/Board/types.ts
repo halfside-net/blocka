@@ -6,6 +6,7 @@ export type BoardCellAddress = {
 };
 
 export type BoardCellOverlay = BoardCellAddress & {
+  className?: string;
   content: React.ReactNode;
   key: string;
   zIndex?: number;

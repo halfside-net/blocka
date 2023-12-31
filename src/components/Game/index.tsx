@@ -111,8 +111,13 @@ export default function Game(props: {
 
               clearBlocks.forEach(({ rowNum, colNum }) => {
                 clearedBlockOverlays.push({
+                  className: 'Game-clearedBlockOverlay',
                   colNum,
-                  content: null, // TODO: `BlockType: ${boardState[rowNum][colNum]}`,
+                  content: (
+                    <Block
+                      type={boardState[rowNum][colNum]}
+                    />
+                  ),
                   key: `${rowNum},${colNum},${activePieceIndex},${seed}`,
                   rowNum
                 });
@@ -121,7 +126,8 @@ export default function Game(props: {
 
               if (clearedBlockOverlays.length) {
                 setCellOverlays(new Set([
-                  ...cellOverlays,
+                  // TODO: Make cleared block overlays remove themselves after the animation so that this doesn't need to clear all existing overlays
+                  // ...cellOverlays,
                   ...clearedBlockOverlays
                 ]));
               }

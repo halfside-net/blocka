@@ -85,7 +85,7 @@ function BoardCell(props: {
       />
       {props.overlays?.map((overlay) => (
         <div
-          className="Board-cellOverlay"
+          className={`Board-cellOverlay ${overlay.className ?? ''}`}
           key={overlay.key}
           style={{
             zIndex: overlay.zIndex
