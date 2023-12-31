@@ -66,16 +66,21 @@ export default function Game(props: {
         onDragEnd={event => {
           if (activePiece && event.over?.data.current) {
             const boardState = generateBoardState(boardSize, props.gameData?.boardState);
+            const placedBlocks: BoardCellAddress[] = [];
 
             // Place the piece on the board if it fits
             if (pieceFitsOnBoard(boardState, activePiece, {
               colNum: event.over.data.current.colNum,
               rowNum: event.over.data.current.rowNum
             })) {
-              activePiece.forEach((row, rowNum) =>
-                row.forEach((block, colNum) => {
+              activePiece.forEach((pieceRow, pieceRowNum) =>
+                pieceRow.forEach((block, pieceColNum) => {
                   if (block !== BlockType.EMPTY) {
-                    boardState[event.over!.data.current!.rowNum - activePiece.length + rowNum + 1][event.over!.data.current!.colNum - row.length + colNum + 1] = block;
+                    const rowNum = event.over!.data.current!.rowNum - activePiece.length + pieceRowNum + 1;
+                    const colNum = event.over!.data.current!.colNum - pieceRow.length + pieceColNum + 1;
+
+                    boardState[rowNum][colNum] = block;
+                    placedBlocks.push({ colNum, rowNum });
                   }
                 })
               );
@@ -89,34 +94,51 @@ export default function Game(props: {
               const score = (props.gameData?.score ?? 0) + pieceScore(activePiece);
 
               // Clear any rows or columns that are full
-              const clearRows = boardState
+              const clearedRows = boardState
                 .map((row, rowNum) => ({ row, rowNum }))
                 .filter(({ row }) => row.every(block => block !== BlockType.EMPTY))
                 .map(({ rowNum }) => rowNum);
-              const clearCols = boardState[0]
+              const clearedCols = boardState[0]
                 .map((_, colNum) => ({ col: boardState.map(row => (row[colNum])), colNum }))
                 .filter(({ col }) => col.every(block => block !== BlockType.EMPTY))
                 .map(({ colNum }) => colNum);
-              const clearBlocks: BoardCellAddress[] = [];
+              const placedBlocksInClearedRows = placedBlocks.filter(({ rowNum }) => clearedRows.includes(rowNum));
+              const placedBlocksInClearedCols = placedBlocks.filter(({ colNum }) => clearedCols.includes(colNum));
+              const clearedBlocks: BoardCellAddress[] = [];
               const clearedBlockOverlays: BoardCellOverlay[] = [];
 
-              clearRows.forEach(rowNum => {
-                clearBlocks.push(...boardState[rowNum].map((_, colNum) => ({ rowNum, colNum })));
+              clearedRows.forEach(rowNum => {
+                clearedBlocks.push(...boardState[rowNum].map((_, colNum) => ({ rowNum, colNum })));
               });
-              clearCols.forEach(colNum => boardState.forEach((row, rowNum) => {
-                if (!clearRows.includes(rowNum)) {
-                  clearBlocks.push({ rowNum, colNum });
+              clearedCols.forEach(colNum => boardState.forEach((row, rowNum) => {
+                if (!clearedRows.includes(rowNum)) {
+                  clearedBlocks.push({ rowNum, colNum });
                 }
               }));
 
-              clearBlocks.forEach(({ rowNum, colNum }) => {
+              clearedBlocks.forEach(({ rowNum, colNum }) => {
+                const nearestClearedPlacedBlockDistance = Math.min(
+                  ...placedBlocksInClearedRows
+                    .filter(({ rowNum: placedRowNum }) => rowNum === placedRowNum)
+                    .map(({ colNum: placedColNum }) => Math.abs(colNum - placedColNum)),
+                  ...placedBlocksInClearedCols
+                    .filter(({ colNum: placedColNum }) => colNum === placedColNum)
+                    .map(({ rowNum: placedRowNum }) => Math.abs(rowNum - placedRowNum))
+                );
+
                 clearedBlockOverlays.push({
-                  className: 'Game-clearedBlockOverlay',
                   colNum,
                   content: (
-                    <Block
-                      type={boardState[rowNum][colNum]}
-                    />
+                    <div
+                      className="Game-clearedBlockOverlay"
+                      style={{
+                        animationDelay: `${nearestClearedPlacedBlockDistance * 0.1}s`
+                      }}
+                    >
+                      <Block
+                        type={boardState[rowNum][colNum]}
+                      />
+                    </div>
                   ),
                   key: `${rowNum},${colNum},${activePieceIndex},${seed}`,
                   rowNum
