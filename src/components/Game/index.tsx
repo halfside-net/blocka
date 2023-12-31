@@ -19,8 +19,8 @@ export default function Game(props: {
   onSave: (savedData: GameData) => void;
 }) {
   const [activeCell, setActiveCell] = useState<BoardCellData | null>(null);
-  const [draggingPiece, setDraggingPiece] = useState<PieceData | null>(null);
-  const [draggingPieceIndex, setDraggingPieceIndex] = useState<number | null>(null);
+  const [activePiece, setActivePiece] = useState<PieceData | null>(null);
+  const [activePieceIndex, setActivePieceIndex] = useState<number | null>(null);
 
   const boardCellRef = useRef<HTMLDivElement>();
 
@@ -52,47 +52,47 @@ export default function Game(props: {
       </div>
       <DndContext
         onDragEnd={event => {
-          if (draggingPiece && event.over?.data.current) {
+          if (activePiece && event.over?.data.current) {
             const boardState = generateBoardState(boardSize, props.gameData?.boardState);
 
-            if (pieceFitsOnBoard(boardState, draggingPiece, {
+            if (pieceFitsOnBoard(boardState, activePiece, {
               colNum: event.over.data.current.colNum,
               rowNum: event.over.data.current.rowNum
             })) {
-              draggingPiece.forEach((row, rowNum) =>
+              activePiece.forEach((row, rowNum) =>
                 row.forEach((block, colNum) => {
-                  boardState[event.over!.data.current!.rowNum - draggingPiece.length + rowNum + 1][event.over!.data.current!.colNum - row.length + colNum + 1] = block;
+                  boardState[event.over!.data.current!.rowNum - activePiece.length + rowNum + 1][event.over!.data.current!.colNum - row.length + colNum + 1] = block;
                 })
               );
 
-              let piecesUsed = Array.from({ length: numPieces }, (_, i) => !!props.gameData?.piecesUsed?.[i] || i == draggingPieceIndex);
+              let piecesUsed = Array.from({ length: numPieces }, (_, i) => !!props.gameData?.piecesUsed?.[i] || i == activePieceIndex);
 
               props.onSave({
                 ...props.gameData,
                 boardState,
                 piecesUsed,
-                score: (props.gameData?.score ?? 0) + pieceScore(draggingPiece)
+                score: (props.gameData?.score ?? 0) + pieceScore(activePiece)
               });
             }
           }
 
           setActiveCell(null);
-          setDraggingPiece(null);
-          setDraggingPieceIndex(null);
+          setActivePiece(null);
+          setActivePieceIndex(null);
         }}
         onDragOver={event => setActiveCell(event.over?.data.current ? {
           colNum: event.over.data.current.colNum,
           rowNum: event.over.data.current.rowNum
         } : null)}
         onDragStart={event => {
-          setDraggingPiece(event.active.data.current?.pieceData ?? null)
-          setDraggingPieceIndex(event.active.data.current?.pieceIndex ?? null)
+          setActivePiece(event.active.data.current?.pieceData ?? null)
+          setActivePieceIndex(event.active.data.current?.pieceIndex ?? null)
         }}
       >
         <GameMain
           activeCell={activeCell}
           boardCellRef={boardCellRef}
-          draggingPiece={draggingPiece}
+          activePiece={activePiece}
           gameData={props.gameData}
         />
         <DragOverlay
@@ -101,12 +101,12 @@ export default function Game(props: {
             width: boardCellRef.current?.offsetWidth
           }}
         >
-          {draggingPiece && (
-            <div className="Game-draggingPieceWrapper">
+          {activePiece && (
+            <div className="Game-activePieceWrapper">
               <Piece
                 blockSize={boardCellRef.current?.offsetHeight}
-                className="Game-draggingPiece"
-                pieceData={draggingPiece}
+                className="Game-activePiece"
+                pieceData={activePiece}
               />
             </div>
           )}
@@ -119,7 +119,7 @@ export default function Game(props: {
 function GameMain(props: {
   activeCell: BoardCellData | null;
   boardCellRef: React.MutableRefObject<HTMLDivElement | undefined>;
-  draggingPiece: PieceData | null;
+  activePiece: PieceData | null;
   gameData: GameData;
 }) {
   const rng = props.gameData.seed ? mulberry32Generator(props.gameData.seed, 91661749) : null;
@@ -130,7 +130,7 @@ function GameMain(props: {
         activeCell={props.activeCell}
         cellRef={props.boardCellRef}
         className="Game-board"
-        draggingPiece={props.draggingPiece}
+        activePiece={props.activePiece}
         size={boardSize}
         state={props.gameData?.boardState}
       />

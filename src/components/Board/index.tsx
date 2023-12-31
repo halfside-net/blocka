@@ -10,18 +10,18 @@ export default function Board(props: {
   activeCell?: BoardCellData | null;
   cellRef?: React.MutableRefObject<HTMLDivElement | undefined>; // Reference to the first cell on the board
   className?: string;
-  draggingPiece?: PieceData | null;
+  activePiece?: PieceData | null;
   size: number;
   state?: BoardState;
 }) {
   const boardState = generateBoardState(props.size, props.state);
-  const draggingPieceFits = props.draggingPiece && props.activeCell && pieceFitsOnBoard(boardState, props.draggingPiece, props.activeCell);
+  const activePieceFits = props.activePiece && props.activeCell && pieceFitsOnBoard(boardState, props.activePiece, props.activeCell);
 
   return (
     <div className={`Board ${props.className ?? ''}`}>
       <div className="Board-grid">
         {boardState.map((row, rowNum) => row.map((blockType, colNum) => {
-          const previewBlock = draggingPieceFits ? getPieceBlockForCell(props.draggingPiece!, props.activeCell!, rowNum, colNum) : undefined;
+          const previewBlock = activePieceFits ? getPieceBlockForCell(props.activePiece!, props.activeCell!, rowNum, colNum) : undefined;
 
           return (
             <BoardCell

@@ -92,14 +92,14 @@
     align-items: center;
   }
 
-  &-draggingPieceWrapper {
+  &-activePieceWrapper {
     position: relative;
     top: $Game-dragging-piece-offset-top;
     height: 100%;
     width: 100%;
   }
 
-  &-draggingPiece {
+  &-activePiece {
     position: absolute;
     right: 0;
     bottom: 0;
