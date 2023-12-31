@@ -33,7 +33,7 @@
     @extend %Button;
     @extend %Button--colored;
     @extend %Button--shaped;
-    @extend %Button--size2;
+    @include ButtonSize(2);
 
     flex-shrink: 0;
 

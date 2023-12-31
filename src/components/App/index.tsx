@@ -118,6 +118,7 @@ export default function App() {
       >
         <SettingsPage
           onChange={changedSettings => setSettings({ ...settings, ...changedSettings })}
+          onResetHighScore={() => setGameData({ ...gameData, highScore: 0 })}
           settings={settings}
         />
       </div>

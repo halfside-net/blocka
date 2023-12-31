@@ -14,22 +14,12 @@
   &--shaped {
     border-radius: $Button-border-radius;
   }
+}
 
-  // Sizes
-
-  &--size1 {
-    border-width: $Button-border-width-base;
-    padding:
-      $Button-padding-top-bottom-base
-      $Button-padding-left-right-base;
-    font-size: $Button-font-size-base;
-  }
-
-  &--size2 {
-    border-width: 2 * $Button-border-width-base;
-    padding:
-      2 * $Button-padding-top-bottom-base
-      2 * $Button-padding-left-right-base;
-    font-size: 2 * $Button-font-size-base;
-  }
+@mixin ButtonSize($scale: 1) {
+  border-width: $scale * $Button-border-width-base;
+  padding:
+    $scale * $Button-padding-top-bottom-base
+    $scale * $Button-padding-left-right-base;
+  font-size: $scale * $Button-font-size-base;
 }

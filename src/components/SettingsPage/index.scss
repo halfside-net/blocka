@@ -1,4 +1,6 @@
+@use 'sass:math';
 @import '~/sass/common.scss';
+@import '~/sass/modules/Button.scss';
 
 /** @define SettingsPage */
 
@@ -10,14 +12,15 @@
     $SettingsPage-padding-top
     $SettingsPage-padding-side
     $SettingsPage-padding-bottom;
+  overflow: auto;
   flex-direction: column;
+  justify-content: center;
+  gap: $SettingsPage-section-gap;
   align-items: center;
 
   &-form {
     display: flex;
-    flex-grow: 1;
     flex-direction: column;
-    justify-content: center;
   }
 
   &-setting {
@@ -67,5 +70,18 @@
         content: '';
       }
     }
+  }
+
+  &-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: $SettingsPage-setting-margin;
+  }
+
+  &-button {
+    @extend %Button;
+    @extend %Button--colored;
+    @extend %Button--shaped;
+    @include ButtonSize(math.div($SettingsPage-setting-font-size, $Button-font-size-base));
   }
 }
