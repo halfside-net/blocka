@@ -142,7 +142,7 @@ function GameMain(props: {
         {Array.from({ length: numPieces }, (_, i) => {
           return rng && (
             <GamePieceSlot
-              id={`piece-${i}`}
+              id={`piece-${i}-${Math.floor(rng() * 100000000)}`}
               key={i}
               pieceData={piecePool[Math.floor(rng() * piecePool.length)]}
               pieceIndex={i}
