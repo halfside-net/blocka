@@ -63,23 +63,25 @@ export default function Game(props: {
             })) {
               activePiece.forEach((row, rowNum) =>
                 row.forEach((block, colNum) => {
-                  boardState[event.over!.data.current!.rowNum - activePiece.length + rowNum + 1][event.over!.data.current!.colNum - row.length + colNum + 1] = block;
+                  if (block !== BlockType.EMPTY) {
+                    boardState[event.over!.data.current!.rowNum - activePiece.length + rowNum + 1][event.over!.data.current!.colNum - row.length + colNum + 1] = block;
+                  }
                 })
               );
 
               const clearRows = boardState
                 .map((row, rowNum) => ({ row, rowNum }))
-                .filter(({ row }) => row.every(block => block != BlockType.EMPTY))
+                .filter(({ row }) => row.every(block => block !== BlockType.EMPTY))
                 .map(({ rowNum }) => rowNum);
               const clearCols = boardState[0]
                 .map((_, colNum) => ({ col: boardState.map(row => (row[colNum])), colNum }))
-                .filter(({ col }) => col.every(block => block != BlockType.EMPTY))
+                .filter(({ col }) => col.every(block => block !== BlockType.EMPTY))
                 .map(({ colNum }) => colNum);
 
               clearRows.forEach(rowNum => boardState[rowNum].fill(BlockType.EMPTY));
               clearCols.forEach(colNum => boardState.forEach(row => row[colNum] = BlockType.EMPTY));
 
-              const piecesUsed = Array.from({ length: numPieces }, (_, i) => !!props.gameData?.piecesUsed?.[i] || i == activePieceIndex);
+              const piecesUsed = Array.from({ length: numPieces }, (_, i) => !!props.gameData?.piecesUsed?.[i] || i === activePieceIndex);
               const allPiecesUsed = piecesUsed.every(used => used);
               const score = (props.gameData?.score ?? 0) + pieceScore(activePiece);
 

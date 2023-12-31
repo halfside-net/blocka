@@ -1,7 +1,7 @@
 import type { AppDataV1 } from './types';
 
 export function isAppDataV1(obj: any): obj is AppDataV1 {
-  return obj && typeof obj == 'object'
+  return obj && typeof obj === 'object'
     && 'version' in obj
     && Object.entries(obj).every(([key, value]) => {
       switch (key) {

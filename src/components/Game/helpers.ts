@@ -24,7 +24,7 @@ export function rotatePiece(piece: PieceData, rotations = 1): PieceData {
 
   if (intRotations < 0 || 3 < intRotations) {
     return rotatePiece(piece, (intRotations % 4 + 4) % 4);
-  } else if (intRotations == 0) {
+  } else if (intRotations === 0) {
     return piece;
   }
 

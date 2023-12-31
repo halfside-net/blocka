@@ -22,15 +22,16 @@ export default function Board(props: {
       <div className="Board-grid">
         {boardState.map((row, rowNum) => row.map((blockType, colNum) => {
           const previewBlock = activePieceFits ? getPieceBlockForCell(props.activePiece!, props.activeCell!, rowNum, colNum) : undefined;
+          const showPreview = previewBlock != null && previewBlock !== BlockType.EMPTY;
 
           return (
             <BoardCell
-              blockType={previewBlock ?? blockType}
+              blockType={showPreview ? previewBlock : blockType}
               cellRef={rowNum === 0 && colNum === 0 ? props.cellRef : undefined}
               colNum={colNum}
               id={`board-cell-${rowNum}-${colNum}`}
+              isPreview={showPreview}
               key={`${rowNum},${colNum}`}
-              preview={previewBlock != null}
               rowNum={rowNum}
             />
           );
@@ -45,7 +46,7 @@ function BoardCell(props: {
   cellRef?: React.MutableRefObject<HTMLDivElement | undefined>;
   colNum: number;
   id: string;
-  preview?: boolean;
+  isPreview?: boolean;
   rowNum: number;
 }) {
   const { setNodeRef } = useDroppable({
@@ -69,7 +70,7 @@ function BoardCell(props: {
       }}
     >
       <Block
-        preview={props.preview}
+        isPreview={props.isPreview}
         type={props.blockType}
       />
     </div>
