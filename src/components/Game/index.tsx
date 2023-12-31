@@ -11,7 +11,7 @@ import Piece from '~/components/Piece';
 import { pieceScore } from '~/components/Piece/helpers';
 import type { PieceData } from '~/components/Piece/types';
 import { boardSize, numPieces, piecePool } from './constants';
-import { newGameDataSeed } from './helpers';
+import { newGameDataSeed, getPieces, newGameData } from './helpers';
 import type { GameData } from './types';
 
 const maxPieceSize = Math.max(...piecePool.map(pieceData => Math.max(pieceData.length, ...pieceData.map(row => row.length))));
@@ -57,6 +57,7 @@ export default function Game(props: {
           if (activePiece && event.over?.data.current) {
             const boardState = generateBoardState(boardSize, props.gameData?.boardState);
 
+            // Place the piece on the board if it fits
             if (pieceFitsOnBoard(boardState, activePiece, {
               colNum: event.over.data.current.colNum,
               rowNum: event.over.data.current.rowNum
@@ -69,6 +70,7 @@ export default function Game(props: {
                 })
               );
 
+              // Clear any rows or columns that are full
               const clearRows = boardState
                 .map((row, rowNum) => ({ row, rowNum }))
                 .filter(({ row }) => row.every(block => block !== BlockType.EMPTY))
@@ -81,17 +83,38 @@ export default function Game(props: {
               clearRows.forEach(rowNum => boardState[rowNum].fill(BlockType.EMPTY));
               clearCols.forEach(colNum => boardState.forEach(row => row[colNum] = BlockType.EMPTY));
 
+              // Update piecesUsed and refresh if all are used
               const piecesUsed = Array.from({ length: numPieces }, (_, i) => !!props.gameData?.piecesUsed?.[i] || i === activePieceIndex);
               const allPiecesUsed = piecesUsed.every(used => used);
+
+              // Update score
               const score = (props.gameData?.score ?? 0) + pieceScore(activePiece);
 
-              props.onSave({
+              // Save game data
+              const gameData = {
                 boardState,
                 highScore: Math.max(props.gameData?.highScore ?? 0, score),
                 piecesUsed: allPiecesUsed ? Array.from({ length: numPieces }, () => false) : piecesUsed,
                 score,
-                seed: allPiecesUsed ? newGameDataSeed(props.gameData?.seed) : props.gameData?.seed,
-              });
+                seed: allPiecesUsed || props.gameData?.seed == null ? newGameDataSeed(props.gameData?.seed) : props.gameData.seed
+              };
+
+              props.onSave(gameData);
+
+              // Loss detection
+              const pieces = getPieces(numPieces, gameData.seed);
+
+              if (pieces.every((piece, i) =>
+                gameData.piecesUsed[i] || boardState.every((row, rowNum) => row.every((_, colNum) =>
+                  !pieceFitsOnBoard(boardState, piece, { rowNum, colNum })
+                ))
+              )) {
+                window.setTimeout(() => {
+                  if (window.confirm('No more moves! Start a new game?')) {
+                    props.onSave(newGameData(gameData));
+                  }
+                }, 500);
+              }
             }
           }
 
@@ -141,6 +164,7 @@ function GameMain(props: {
   activePiece: PieceData | null;
   gameData: GameData;
 }) {
+  const pieces = props.gameData.seed ? getPieces(numPieces, props.gameData.seed) : [];
   const rng = props.gameData.seed ? mulberry32Generator(props.gameData.seed, 91661749) : null;
 
   return (
@@ -155,11 +179,11 @@ function GameMain(props: {
       />
       <div className="Game-pieces">
         {Array.from({ length: numPieces }, (_, i) => {
-          return rng && (
+          return rng && pieces[i] && (
             <GamePieceSlot
-              id={`piece-${i}-${Math.floor(rng() * 100000000)}`}
+              id={`piece-${i}-${Math.floor(rng() * 1e8)}`}
               key={i}
-              pieceData={piecePool[Math.floor(rng() * piecePool.length)]}
+              pieceData={pieces[i]}
               pieceIndex={i}
               used={props.gameData?.piecesUsed?.[i]}
             />

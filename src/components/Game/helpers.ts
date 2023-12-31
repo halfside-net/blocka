@@ -1,7 +1,14 @@
 import { mulberry32Generator } from '~/ts/helpers';
 import type { PieceData } from '~/components/Piece/types';
 import { BlockType } from '../Block/types';
-import { GameData } from './types';
+import { piecePool } from './constants';
+import type { GameData } from './types';
+
+export function getPieces(numPieces: number, seed: number): PieceData[] {
+  const rng = mulberry32Generator(seed, 60454930);
+
+  return Array.from({ length: numPieces }, () => piecePool[Math.floor(rng() * piecePool.length)]);
+}
 
 export function newGameData(data?: GameData): GameData {
   return {
