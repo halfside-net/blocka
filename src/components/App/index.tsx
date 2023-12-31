@@ -125,6 +125,7 @@ export default function App() {
         className="App-level"
       >
         <Game
+          disableAnimations={settings.disableAnimations}
           onSave={setGameData}
           gameData={gameData}
         />

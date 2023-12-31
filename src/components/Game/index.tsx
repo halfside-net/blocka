@@ -17,6 +17,7 @@ import type { GameData } from './types';
 const maxPieceSize = Math.max(...piecePool.map(pieceData => Math.max(pieceData.length, ...pieceData.map(row => row.length))));
 
 export default function Game(props: {
+  disableAnimations?: boolean;
   gameData?: GameData;
   onSave?: (savedData: GameData) => void;
 }) {
@@ -117,32 +118,35 @@ export default function Game(props: {
               }));
 
               clearedBlocks.forEach(({ rowNum, colNum }) => {
-                const nearestClearedPlacedBlockDistance = Math.min(
-                  ...placedBlocksInClearedRows
-                    .filter(({ rowNum: placedRowNum }) => rowNum === placedRowNum)
-                    .map(({ colNum: placedColNum }) => Math.abs(colNum - placedColNum)),
-                  ...placedBlocksInClearedCols
-                    .filter(({ colNum: placedColNum }) => colNum === placedColNum)
-                    .map(({ rowNum: placedRowNum }) => Math.abs(rowNum - placedRowNum))
-                );
+                if (!props.disableAnimations) {
+                  const nearestClearedPlacedBlockDistance = Math.min(
+                    ...placedBlocksInClearedRows
+                      .filter(({ rowNum: placedRowNum }) => rowNum === placedRowNum)
+                      .map(({ colNum: placedColNum }) => Math.abs(colNum - placedColNum)),
+                    ...placedBlocksInClearedCols
+                      .filter(({ colNum: placedColNum }) => colNum === placedColNum)
+                      .map(({ rowNum: placedRowNum }) => Math.abs(rowNum - placedRowNum))
+                  );
 
-                clearedBlockOverlays.push({
-                  colNum,
-                  content: (
-                    <div
-                      className="Game-clearedBlockOverlay"
-                      style={{
-                        animationDelay: `${nearestClearedPlacedBlockDistance * 0.1}s`
-                      }}
-                    >
-                      <Block
-                        type={boardState[rowNum][colNum]}
-                      />
-                    </div>
-                  ),
-                  key: `${rowNum},${colNum},${activePieceIndex},${seed}`,
-                  rowNum
-                });
+                  clearedBlockOverlays.push({
+                    colNum,
+                    content: (
+                      <div
+                        className="Game-clearedBlockOverlay"
+                        style={{
+                          animationDelay: `${nearestClearedPlacedBlockDistance * 0.1}s`
+                        }}
+                      >
+                        <Block
+                          type={boardState[rowNum][colNum]}
+                        />
+                      </div>
+                    ),
+                    key: `${rowNum},${colNum},${activePieceIndex},${seed}`,
+                    rowNum
+                  });
+                }
+
                 boardState[rowNum][colNum] = BlockType.EMPTY;
               });
 
@@ -200,7 +204,9 @@ export default function Game(props: {
           activePiece={activePiece}
           gameData={props.gameData}
         />
-        <DragOverlay>
+        <DragOverlay
+          dropAnimation={props.disableAnimations ? null : undefined}
+        >
           {activePiece && boardCellRef.current && (
             <div
               className="Game-activePieceWrapper"
