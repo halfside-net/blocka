@@ -5,7 +5,8 @@ import { ReactComponent as TrophySVG } from '~/assets/images/trophy.svg';
 import { mulberry32Generator } from '~/ts/helpers';
 import Board from '~/components/Board';
 import { generateBoardState, pieceFitsOnBoard } from '~/components/Board/helpers';
-import { BoardCellData } from '~/components/Board/types';
+import type { BoardCellData } from '~/components/Board/types';
+import { BlockType } from '~/components/Block/types';
 import Piece from '~/components/Piece';
 import { pieceScore } from '~/components/Piece/helpers';
 import type { PieceData } from '~/components/Piece/types';
@@ -65,6 +66,18 @@ export default function Game(props: {
                   boardState[event.over!.data.current!.rowNum - activePiece.length + rowNum + 1][event.over!.data.current!.colNum - row.length + colNum + 1] = block;
                 })
               );
+
+              const clearRows = boardState
+                .map((row, rowNum) => ({ row, rowNum }))
+                .filter(({ row }) => row.every(block => block != BlockType.EMPTY))
+                .map(({ rowNum }) => rowNum);
+              const clearCols = boardState[0]
+                .map((_, colNum) => ({ col: boardState.map(row => (row[colNum])), colNum }))
+                .filter(({ col }) => col.every(block => block != BlockType.EMPTY))
+                .map(({ colNum }) => colNum);
+
+              clearRows.forEach(rowNum => boardState[rowNum].fill(BlockType.EMPTY));
+              clearCols.forEach(colNum => boardState.forEach(row => row[colNum] = BlockType.EMPTY));
 
               const piecesUsed = Array.from({ length: numPieces }, (_, i) => !!props.gameData?.piecesUsed?.[i] || i == activePieceIndex);
               const allPiecesUsed = piecesUsed.every(used => used);
