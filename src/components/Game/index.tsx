@@ -4,8 +4,10 @@ import { useRef, useState } from 'react';
 import { ReactComponent as TrophySVG } from '~/assets/images/trophy.svg';
 import { mulberry32Generator } from '~/ts/helpers';
 import Board from '~/components/Board';
+import { generateBoardState, pieceFitsOnBoard } from '~/components/Board/helpers';
 import { BoardCellData } from '~/components/Board/types';
 import Piece from '~/components/Piece';
+import { pieceScore } from '~/components/Piece/helpers';
 import type { PieceData } from '~/components/Piece/types';
 import { boardSize, numPieces, piecePool } from './constants';
 import type { GameData } from './types';
@@ -18,6 +20,7 @@ export default function Game(props: {
 }) {
   const [activeCell, setActiveCell] = useState<BoardCellData | null>(null);
   const [draggingPiece, setDraggingPiece] = useState<PieceData | null>(null);
+  const [draggingPieceIndex, setDraggingPieceIndex] = useState<number | null>(null);
 
   const boardCellRef = useRef<HTMLDivElement>();
 
@@ -48,13 +51,42 @@ export default function Game(props: {
         </div>
       </div>
       <DndContext
-        onDragEnd={event => setActiveCell(null)}
+        onDragEnd={event => {
+          if (draggingPiece && event.over?.data.current) {
+            const boardState = generateBoardState(boardSize, props.gameData?.boardState);
+
+            if (pieceFitsOnBoard(boardState, draggingPiece, {
+              colNum: event.over.data.current.colNum,
+              rowNum: event.over.data.current.rowNum
+            })) {
+              draggingPiece.forEach((row, rowNum) =>
+                row.forEach((block, colNum) => {
+                  boardState[event.over!.data.current!.rowNum - draggingPiece.length + rowNum + 1][event.over!.data.current!.colNum - row.length + colNum + 1] = block;
+                })
+              );
+
+              let piecesUsed = Array.from({ length: numPieces }, (_, i) => !!props.gameData?.piecesUsed?.[i] || i == draggingPieceIndex);
+
+              props.onSave({
+                ...props.gameData,
+                boardState,
+                piecesUsed,
+                score: (props.gameData?.score ?? 0) + pieceScore(draggingPiece)
+              });
+            }
+          }
+
+          setActiveCell(null);
+          setDraggingPiece(null);
+          setDraggingPieceIndex(null);
+        }}
         onDragOver={event => setActiveCell(event.over?.data.current ? {
           colNum: event.over.data.current.colNum,
           rowNum: event.over.data.current.rowNum
         } : null)}
         onDragStart={event => {
           setDraggingPiece(event.active.data.current?.pieceData ?? null)
+          setDraggingPieceIndex(event.active.data.current?.pieceIndex ?? null)
         }}
       >
         <GameMain
@@ -104,11 +136,13 @@ function GameMain(props: {
       />
       <div className="Game-pieces">
         {Array.from({ length: numPieces }, (_, i) => {
-          return rng && !props.gameData?.piecesUsed?.[i] && (
+          return rng && (
             <GamePieceSlot
               id={`piece-${i}`}
               key={i}
               pieceData={piecePool[Math.floor(rng() * piecePool.length)]}
+              pieceIndex={i}
+              used={props.gameData?.piecesUsed?.[i]}
             />
           );
         })}
@@ -120,20 +154,23 @@ function GameMain(props: {
 function GamePieceSlot(props: {
   id: string;
   pieceData: PieceData;
+  pieceIndex: number;
+  used?: boolean;
 }) {
   const { attributes, isDragging, listeners, setActivatorNodeRef, setNodeRef } = useDraggable({
     attributes: {
       roleDescription: 'Draggable piece'
     },
     data: {
-      pieceData: props.pieceData
+      pieceData: props.pieceData,
+      pieceIndex: props.pieceIndex
     },
     id: props.id
   });
 
   return (
     <div className="Game-pieceSlot">
-      {!isDragging && (
+      {!props.used && !isDragging && (
         <div
           className="Game-pieceWrapper"
           ref={setActivatorNodeRef}

@@ -14,33 +14,7 @@ import type { AppDataV1 } from './types';
 
 const appId = 'blocka';
 
-// TODO: Remove this
-const testGameData: AppDataV1 = {
-  gameData: {
-    boardState: [
-      [0, 1, 1, 0, 1, 0, 0, 1, 0, 1],
-      [1, 0, 1, 0, 0, 1, 0, 0, 1, 1],
-      [0, 1, 0, 1, 0, 0, 1, 0, 1, 0],
-      [1, 0, 1, 0, 0, 1, 0, 1, 1, 0],
-      [0, 1, 0, 1, 1, 1, 0, 0, 1, 0],
-      [1, 0, 0, 1, 0, 1, 0, 1, 1, 0],
-      [0, 1, 1, 0, 1, 0, 0, 0, 0, 1],
-      [1, 0, 0, 1, 0, 0, 1, 1, 1, 0],
-      [1, 0, 0, 1, 1, 0, 1, 0, 0, 1],
-      [0, 1, 1, 0, 1, 1, 0, 1, 1, 1]
-    ],
-    highScore: 1234567,
-    piecesUsed: [false, false, false],
-    score: 123,
-    seed: 12345
-  },
-  version: 1
-};
-
 async function loadData(): Promise<AppDataV1> {
-  // TODO: Remove this
-  // return testGameData;
-
   const jsonData = window.localStorage.getItem(appId);
 
   if (jsonData) {

@@ -3,7 +3,7 @@ import { useDroppable } from '@dnd-kit/core';
 import Block from '~/components/Block';
 import { BlockType } from '~/components/Block/types';
 import { PieceData } from '~/components/Piece/types';
-import { getPieceBlockForCell } from './helpers';
+import { generateBoardState, getPieceBlockForCell, pieceFitsOnBoard } from './helpers';
 import type { BoardCellData, BoardState } from './types';
 
 export default function Board(props: {
@@ -14,14 +14,8 @@ export default function Board(props: {
   size: number;
   state?: BoardState;
 }) {
-  const boardState = Array.from({ length: props.size }, (_, row) =>
-    Array.from({ length: props.size }, (_, col) => props.state?.[row]?.[col] ?? BlockType.EMPTY)
-  );
-
-  const draggingPieceFits = props.activeCell && props.draggingPiece?.every((row, rowNum) =>
-    row.every((block, colNum) => block == BlockType.EMPTY ||
-      boardState[props.activeCell!.rowNum - props.draggingPiece!.length + 1 + rowNum]?.[props.activeCell!.colNum - row.length + 1 + colNum] == BlockType.EMPTY)
-  );
+  const boardState = generateBoardState(props.size, props.state);
+  const draggingPieceFits = props.draggingPiece && props.activeCell && pieceFitsOnBoard(boardState, props.draggingPiece, props.activeCell);
 
   return (
     <div className={`Board ${props.className ?? ''}`}>
