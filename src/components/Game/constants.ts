@@ -1,6 +1,6 @@
-import { BlockType } from "~/components/Block/types";
-import type { PieceData } from "~/components/Piece/types";
-import { rotatePiece } from "./helpers";
+import { BlockType } from '~/components/Block/types';
+import type { PieceData } from '~/components/Piece/types';
+import { rotatePiece } from './helpers';
 
 // Board Configuration
 

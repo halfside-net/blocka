@@ -1,12 +1,17 @@
-import type { PieceData } from "~/components/Piece/types";
-import { BlockType } from "../Block/types";
-import { GameData } from "./types";
+import { mulberry32Generator } from '~/ts/helpers';
+import type { PieceData } from '~/components/Piece/types';
+import { BlockType } from '../Block/types';
+import { GameData } from './types';
 
 export function newGameData(data?: GameData): GameData {
   return {
     highScore: data?.highScore,
-    seed: Math.floor(Math.random() * 4294967296)
+    seed: newGameDataSeed()
   };
+}
+
+export function newGameDataSeed(currentSeed?: number): number {
+  return mulberry32Generator(currentSeed ?? Math.floor(Math.random() * 4294967296), 34729475)() * 4294967296;
 }
 
 /**

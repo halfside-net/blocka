@@ -10,6 +10,7 @@ import Piece from '~/components/Piece';
 import { pieceScore } from '~/components/Piece/helpers';
 import type { PieceData } from '~/components/Piece/types';
 import { boardSize, numPieces, piecePool } from './constants';
+import { newGameDataSeed } from './helpers';
 import type { GameData } from './types';
 
 const maxPieceSize = Math.max(...piecePool.map(pieceData => Math.max(pieceData.length, ...pieceData.map(row => row.length))));
@@ -65,13 +66,16 @@ export default function Game(props: {
                 })
               );
 
-              let piecesUsed = Array.from({ length: numPieces }, (_, i) => !!props.gameData?.piecesUsed?.[i] || i == activePieceIndex);
+              const piecesUsed = Array.from({ length: numPieces }, (_, i) => !!props.gameData?.piecesUsed?.[i] || i == activePieceIndex);
+              const allPiecesUsed = piecesUsed.every(used => used);
+              const score = (props.gameData?.score ?? 0) + pieceScore(activePiece);
 
               props.onSave({
-                ...props.gameData,
                 boardState,
-                piecesUsed,
-                score: (props.gameData?.score ?? 0) + pieceScore(activePiece)
+                highScore: Math.max(props.gameData?.highScore ?? 0, score),
+                piecesUsed: allPiecesUsed ? Array.from({ length: numPieces }, () => false) : piecesUsed,
+                score,
+                seed: allPiecesUsed ? newGameDataSeed(props.gameData?.seed) : props.gameData?.seed,
               });
             }
           }
