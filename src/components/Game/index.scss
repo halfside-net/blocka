@@ -89,13 +89,27 @@
 
   &-pieceWrapper {
     display: flex;
+    position: relative;
     width: 100%;
     justify-content: center;
     align-items: center;
   }
 
+  &-pieceDragAnchor {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  // Hide the piece when the drag anchor is being hidden
+  &-pieceDragAnchor[style*="opacity:"] + &-piece {
+    opacity: 0;
+  }
+
   &-activePieceWrapper {
     position: relative;
+    top: -50%;
     margin-top: $Game-dragging-piece-offset-top;
     height: 100%;
     width: 100%;

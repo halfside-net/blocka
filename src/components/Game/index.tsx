@@ -22,9 +22,7 @@ export default function Game(props: {
 }) {
   const [activeCell, setActiveCell] = useState<BoardCellData | null>(null);
   const [activePiece, setActivePiece] = useState<PieceData | null>(null);
-  const [activePieceHeight, setActivePieceHeight] = useState<number>(0);
   const [activePieceIndex, setActivePieceIndex] = useState<number | null>(null);
-  const [activePieceWidth, setActivePieceWidth] = useState<number>(0);
 
   const boardCellRef = useRef<HTMLElement>();
 
@@ -33,9 +31,7 @@ export default function Game(props: {
   function clearActivePiece() {
     setActiveCell(null);
     setActivePiece(null);
-    setActivePieceHeight(0);
     setActivePieceIndex(null);
-    setActivePieceWidth(0);
   }
 
   return (
@@ -139,9 +135,7 @@ export default function Game(props: {
         } : null)}
         onDragStart={event => {
           setActivePiece(event.active.data.current?.pieceData ?? null)
-          setActivePieceHeight(event.active.data.current?.pieceHeight ?? 0)
           setActivePieceIndex(event.active.data.current?.pieceIndex ?? null)
-          setActivePieceWidth(event.active.data.current?.pieceWidth ?? 0)
         }}
       >
         <GameMain
@@ -150,21 +144,16 @@ export default function Game(props: {
           activePiece={activePiece}
           gameData={props.gameData}
         />
-        <DragOverlay
-          style={{
-            height: boardCellRef.current?.offsetHeight,
-            width: boardCellRef.current?.offsetWidth
-          }}
-        >
+        <DragOverlay>
           {activePiece && boardCellRef.current && (
             <div
               className="Game-activePieceWrapper"
               style={{
-                left: `calc((${activePieceWidth}px - ${boardCellRef.current.offsetWidth}px) / 2 + ${activePieceBlockOffset}px + var(--block-gap-ratio) * ${activePieceBlockOffset}px)`,
+                left: `calc(${activePieceBlockOffset}px * (1 + var(--block-gap-ratio)) - 50%)`,
               }}
             >
               <Piece
-                blockSize={boardCellRef.current?.offsetHeight}
+                blockSize={boardCellRef.current?.offsetWidth}
                 className="Game-activePiece"
                 pieceData={activePiece}
               />
@@ -198,6 +187,7 @@ function GameMain(props: {
         {Array.from({ length: numPieces }, (_, i) => {
           return pieces[i] && (
             <GamePieceSlot
+              boardCellRef={props.boardCellRef}
               id={`piece-${i}-${props.gameData.seed}`}
               key={i}
               pieceData={pieces[i]}
@@ -212,12 +202,12 @@ function GameMain(props: {
 }
 
 function GamePieceSlot(props: {
+  boardCellRef: React.MutableRefObject<HTMLElement | undefined>;
   id: string;
   pieceData: PieceData;
   pieceIndex: number;
   used?: boolean;
 }) {
-  const pieceRef = useRef<HTMLElement | null>(null);
 
   const { attributes, isDragging, listeners, setActivatorNodeRef, setNodeRef } = useDraggable({
     attributes: {
@@ -225,31 +215,35 @@ function GamePieceSlot(props: {
     },
     data: {
       pieceData: props.pieceData,
-      pieceHeight: pieceRef.current?.offsetHeight ?? 0,
       pieceIndex: props.pieceIndex,
-      pieceWidth: pieceRef.current?.offsetWidth ?? 0
     },
     id: props.id
   });
 
   return (
     <div className="Game-pieceSlot">
-      {!props.used && !isDragging && (
+      {!props.used && (
         <div
           className="Game-pieceWrapper"
           ref={setActivatorNodeRef}
           {...attributes}
           {...listeners}
         >
-          <Piece
-            className="Game-piece"
-            gridSize={maxPieceSize}
-            pieceData={props.pieceData}
-            setRef={element => {
-              pieceRef.current = element;
-              setNodeRef(element);
+          <div
+            className="Game-pieceDragAnchor"
+            ref={setNodeRef}
+            style={{
+              height: props.boardCellRef.current?.offsetHeight,
+              width: props.boardCellRef.current?.offsetWidth
             }}
           />
+          {!isDragging && (
+            <Piece
+              className="Game-piece"
+              gridSize={maxPieceSize}
+              pieceData={props.pieceData}
+            />
+          )}
         </div>
       )}
     </div>

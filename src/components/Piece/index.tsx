@@ -10,7 +10,6 @@ export default function Piece(props: {
   className?: string;
   gridSize?: number;
   pieceData: PieceData;
-  setRef?: (ref: HTMLElement | null) => void;
 }) {
   const numRows = props.pieceData.length;
   const numCols = Math.max(...props.pieceData.map(row => row.length));
@@ -24,7 +23,6 @@ export default function Piece(props: {
     <div
       {...props.additionalProperties}
       className={`Piece ${props.className ?? ''}`}
-      ref={props.setRef}
       style={{
         ...props.additionalStyles,
         gap: `calc(100% / (${numRows} / var(--block-gap-ratio) + ${numRows - 1})) calc(100% / (${numCols} / var(--block-gap-ratio) + ${numCols - 1}))`,
