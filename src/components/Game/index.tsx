@@ -2,10 +2,10 @@ import './index.scss';
 import { DndContext, DragOverlay, useDraggable } from '@dnd-kit/core';
 import { useRef, useState } from 'react';
 import { ReactComponent as TrophySVG } from '~/assets/images/trophy.svg';
-import { mulberry32Generator } from '~/ts/helpers';
 import Board from '~/components/Board';
 import { generateBoardState, pieceFitsOnBoard } from '~/components/Board/helpers';
-import type { BoardCellData } from '~/components/Board/types';
+import type { BoardCellAddress, BoardCellOverlay } from '~/components/Board/types';
+import Block from '~/components/Block';
 import { BlockType } from '~/components/Block/types';
 import Piece from '~/components/Piece';
 import { pieceScore } from '~/components/Piece/helpers';
@@ -17,12 +17,13 @@ import type { GameData } from './types';
 const maxPieceSize = Math.max(...piecePool.map(pieceData => Math.max(pieceData.length, ...pieceData.map(row => row.length))));
 
 export default function Game(props: {
-  gameData: GameData;
-  onSave: (savedData: GameData) => void;
+  gameData?: GameData;
+  onSave?: (savedData: GameData) => void;
 }) {
-  const [activeCell, setActiveCell] = useState<BoardCellData | null>(null);
+  const [activeCell, setActiveCell] = useState<BoardCellAddress | null>(null);
   const [activePiece, setActivePiece] = useState<PieceData | null>(null);
   const [activePieceIndex, setActivePieceIndex] = useState<number | null>(null);
+  const [cellOverlays, setCellOverlays] = useState(new Set<BoardCellOverlay>());
 
   const boardCellRef = useRef<HTMLElement>();
 
@@ -79,6 +80,14 @@ export default function Game(props: {
                 })
               );
 
+              // Update piecesUsed and refresh if all are used
+              const piecesUsed = Array.from({ length: numPieces }, (_, i) => !!props.gameData?.piecesUsed?.[i] || i === activePieceIndex);
+              const allPiecesUsed = piecesUsed.every(used => used);
+              const seed = allPiecesUsed || props.gameData?.seed == null ? newGameDataSeed(props.gameData?.seed) : props.gameData.seed;
+
+              // Update score
+              const score = (props.gameData?.score ?? 0) + pieceScore(activePiece);
+
               // Clear any rows or columns that are full
               const clearRows = boardState
                 .map((row, rowNum) => ({ row, rowNum }))
@@ -88,16 +97,34 @@ export default function Game(props: {
                 .map((_, colNum) => ({ col: boardState.map(row => (row[colNum])), colNum }))
                 .filter(({ col }) => col.every(block => block !== BlockType.EMPTY))
                 .map(({ colNum }) => colNum);
+              const clearBlocks: BoardCellAddress[] = [];
+              const clearedBlockOverlays: BoardCellOverlay[] = [];
 
-              clearRows.forEach(rowNum => boardState[rowNum].fill(BlockType.EMPTY));
-              clearCols.forEach(colNum => boardState.forEach(row => row[colNum] = BlockType.EMPTY));
+              clearRows.forEach(rowNum => {
+                clearBlocks.push(...boardState[rowNum].map((_, colNum) => ({ rowNum, colNum })));
+              });
+              clearCols.forEach(colNum => boardState.forEach((row, rowNum) => {
+                if (!clearRows.includes(rowNum)) {
+                  clearBlocks.push({ rowNum, colNum });
+                }
+              }));
 
-              // Update piecesUsed and refresh if all are used
-              const piecesUsed = Array.from({ length: numPieces }, (_, i) => !!props.gameData?.piecesUsed?.[i] || i === activePieceIndex);
-              const allPiecesUsed = piecesUsed.every(used => used);
+              clearBlocks.forEach(({ rowNum, colNum }) => {
+                clearedBlockOverlays.push({
+                  colNum,
+                  content: null, // TODO: `BlockType: ${boardState[rowNum][colNum]}`,
+                  key: `${rowNum},${colNum},${activePieceIndex},${seed}`,
+                  rowNum
+                });
+                boardState[rowNum][colNum] = BlockType.EMPTY;
+              });
 
-              // Update score
-              const score = (props.gameData?.score ?? 0) + pieceScore(activePiece);
+              if (clearedBlockOverlays.length) {
+                setCellOverlays(new Set([
+                  ...cellOverlays,
+                  ...clearedBlockOverlays
+                ]));
+              }
 
               // Save game data
               const gameData = {
@@ -105,10 +132,10 @@ export default function Game(props: {
                 highScore: Math.max(props.gameData?.highScore ?? 0, score),
                 piecesUsed: allPiecesUsed ? Array.from({ length: numPieces }, () => false) : piecesUsed,
                 score,
-                seed: allPiecesUsed || props.gameData?.seed == null ? newGameDataSeed(props.gameData?.seed) : props.gameData.seed
+                seed
               };
 
-              props.onSave(gameData);
+              props.onSave?.(gameData);
 
               // Loss detection
               const pieces = getPieces(numPieces, gameData.seed);
@@ -120,7 +147,7 @@ export default function Game(props: {
               )) {
                 window.setTimeout(() => {
                   if (window.confirm('No more moves! Start a new game?')) {
-                    props.onSave(newGameData(gameData));
+                    props.onSave?.(newGameData(gameData));
                   }
                 }, 500);
               }
@@ -140,6 +167,7 @@ export default function Game(props: {
       >
         <GameMain
           activeCell={activeCell}
+          boardCellOverlays={cellOverlays}
           boardCellRef={boardCellRef}
           activePiece={activePiece}
           gameData={props.gameData}
@@ -166,17 +194,19 @@ export default function Game(props: {
 }
 
 function GameMain(props: {
-  activeCell: BoardCellData | null;
+  activeCell: BoardCellAddress | null;
+  boardCellOverlays: Set<BoardCellOverlay>;
   boardCellRef: React.MutableRefObject<HTMLElement | undefined>;
   activePiece: PieceData | null;
-  gameData: GameData;
+  gameData?: GameData;
 }) {
-  const pieces = props.gameData.seed ? getPieces(numPieces, props.gameData.seed) : [];
+  const pieces = props.gameData?.seed ? getPieces(numPieces, props.gameData.seed) : [];
 
   return (
     <div className="Game-main">
       <Board
         activeCell={props.activeCell}
+        cellOverlays={props.boardCellOverlays}
         cellRef={props.boardCellRef}
         className="Game-board"
         activePiece={props.activePiece}
@@ -185,7 +215,7 @@ function GameMain(props: {
       />
       <div className="Game-pieces">
         {Array.from({ length: numPieces }, (_, i) => {
-          return pieces[i] && (
+          return props.gameData?.seed && pieces[i] && (
             <GamePieceSlot
               boardCellRef={props.boardCellRef}
               id={`piece-${i}-${props.gameData.seed}`}

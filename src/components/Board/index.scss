@@ -21,8 +21,17 @@
   }
 
   &-cell {
+    position: relative;
     box-shadow: $Board-shadow-inset;
     border-radius: $block-border-radius;
     background-color: $Board-background-color;
+  }
+
+  &-cellOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
   }
 }

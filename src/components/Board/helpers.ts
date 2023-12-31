@@ -1,6 +1,6 @@
 import { BlockType } from '~/components/Block/types';
 import type { PieceData } from '~/components/Piece/types';
-import type { BoardCellData, BoardState } from './types';
+import type { BoardCellAddress, BoardState } from './types';
 
 export function generateBoardState(size: number, initialState?: BoardState) {
   return Array.from({ length: size }, (_, row) =>
@@ -8,9 +8,13 @@ export function generateBoardState(size: number, initialState?: BoardState) {
   )
 }
 
+export function getCellId(rowNum: number, colNum: number) {
+  return `board-cell-${rowNum}-${colNum}`;
+}
+
 export function getPieceBlockForCell(
   pieceData: PieceData,
-  activeCell: BoardCellData,
+  activeCell: BoardCellAddress,
   rowNum: number,
   colNum: number
 ): BlockType | undefined {
@@ -22,7 +26,7 @@ export function getPieceBlockForCell(
 export function pieceFitsOnBoard(
   boardState: BoardState,
   pieceData: PieceData,
-  activeCell: BoardCellData
+  activeCell: BoardCellAddress
 ) {
   return pieceData.every((row, rowNum) =>
     row.every((block, colNum) => {
