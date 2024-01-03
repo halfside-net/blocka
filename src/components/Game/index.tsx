@@ -181,7 +181,7 @@ export default function Game(props: {
                   if (window.confirm('No more moves! Start a new game?')) {
                     props.onSave?.(newGameData(gameData));
                   }
-                }, 500);
+                }, 1500);
               }
             }
           }
