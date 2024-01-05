@@ -10,7 +10,6 @@ $icon-size: 512px;
   height: $icon-size;
   width: $icon-size;
   background: $page-background;
-  padding: math.div($icon-size, 12);
 
   * {
     box-shadow: none !important;
