@@ -1,4 +1,4 @@
-import '~/sass/index.scss';
+import '~/sass/pages/index.scss';
 import { usePageContext } from '../renderer/usePageContext';
 import { description, siteDomain, sitePath, themeColor, title } from '../siteconfig.json';
 import favicon from '~/assets/images/icon.png?w=64';
