@@ -63,167 +63,169 @@ export default function Game(props: {
           </div>
         </div>
       </div>
-      <DndContext
-        onDragCancel={clearActivePiece}
-        onDragEnd={event => {
-          if (activePiece && event.over?.data.current) {
-            const boardState = generateBoardState(boardSize, props.gameData?.boardState);
-            const placedBlocks: BoardCellAddress[] = [];
+      <div className="Game-main">
+        <DndContext
+          onDragCancel={clearActivePiece}
+          onDragEnd={event => {
+            if (activePiece && event.over?.data.current) {
+              const boardState = generateBoardState(boardSize, props.gameData?.boardState);
+              const placedBlocks: BoardCellAddress[] = [];
 
-            // Place the piece on the board if it fits
-            if (pieceFitsOnBoard(boardState, activePiece, {
-              colNum: event.over.data.current.colNum,
-              rowNum: event.over.data.current.rowNum
-            })) {
-              activePiece.forEach((pieceRow, pieceRowNum) =>
-                pieceRow.forEach((block, pieceColNum) => {
-                  if (block !== BlockType.EMPTY) {
-                    const rowNum = event.over!.data.current!.rowNum - activePiece.length + pieceRowNum + 1;
-                    const colNum = event.over!.data.current!.colNum - pieceRow.length + pieceColNum + 1;
+              // Place the piece on the board if it fits
+              if (pieceFitsOnBoard(boardState, activePiece, {
+                colNum: event.over.data.current.colNum,
+                rowNum: event.over.data.current.rowNum
+              })) {
+                activePiece.forEach((pieceRow, pieceRowNum) =>
+                  pieceRow.forEach((block, pieceColNum) => {
+                    if (block !== BlockType.EMPTY) {
+                      const rowNum = event.over!.data.current!.rowNum - activePiece.length + pieceRowNum + 1;
+                      const colNum = event.over!.data.current!.colNum - pieceRow.length + pieceColNum + 1;
 
-                    boardState[rowNum][colNum] = block;
-                    placedBlocks.push({ colNum, rowNum });
+                      boardState[rowNum][colNum] = block;
+                      placedBlocks.push({ colNum, rowNum });
+                    }
+                  })
+                );
+
+                // Update piecesUsed and refresh if all are used
+                const piecesUsed = Array.from({ length: numPieces }, (_, i) => !!props.gameData?.piecesUsed?.[i] || i === activePieceIndex);
+                const allPiecesUsed = piecesUsed.every(used => used);
+                const seed = allPiecesUsed || props.gameData?.seed == null ? newGameDataSeed(props.gameData?.seed) : props.gameData.seed;
+
+                // Update score
+                const score = (props.gameData?.score ?? 0) + pieceScore(activePiece);
+
+                // Clear any rows or columns that are full
+                const clearedRows = boardState
+                  .map((row, rowNum) => ({ row, rowNum }))
+                  .filter(({ row }) => row.every(block => block !== BlockType.EMPTY))
+                  .map(({ rowNum }) => rowNum);
+                const clearedCols = boardState[0]
+                  .map((_, colNum) => ({ col: boardState.map(row => (row[colNum])), colNum }))
+                  .filter(({ col }) => col.every(block => block !== BlockType.EMPTY))
+                  .map(({ colNum }) => colNum);
+                const placedBlocksInClearedRows = placedBlocks.filter(({ rowNum }) => clearedRows.includes(rowNum));
+                const placedBlocksInClearedCols = placedBlocks.filter(({ colNum }) => clearedCols.includes(colNum));
+                const clearedBlocks: BoardCellAddress[] = [];
+                const clearedBlockOverlays: BoardCellOverlay[] = [];
+
+                clearedRows.forEach(rowNum => {
+                  clearedBlocks.push(...boardState[rowNum].map((_, colNum) => ({ rowNum, colNum })));
+                });
+                clearedCols.forEach(colNum => boardState.forEach((row, rowNum) => {
+                  if (!clearedRows.includes(rowNum)) {
+                    clearedBlocks.push({ rowNum, colNum });
                   }
-                })
-              );
+                }));
 
-              // Update piecesUsed and refresh if all are used
-              const piecesUsed = Array.from({ length: numPieces }, (_, i) => !!props.gameData?.piecesUsed?.[i] || i === activePieceIndex);
-              const allPiecesUsed = piecesUsed.every(used => used);
-              const seed = allPiecesUsed || props.gameData?.seed == null ? newGameDataSeed(props.gameData?.seed) : props.gameData.seed;
+                clearedBlocks.forEach(({ rowNum, colNum }) => {
+                  if (!props.disableAnimations) {
+                    const nearestClearedPlacedBlockDistance = Math.min(
+                      ...placedBlocksInClearedRows
+                        .filter(({ rowNum: placedRowNum }) => rowNum === placedRowNum)
+                        .map(({ colNum: placedColNum }) => Math.abs(colNum - placedColNum)),
+                      ...placedBlocksInClearedCols
+                        .filter(({ colNum: placedColNum }) => colNum === placedColNum)
+                        .map(({ rowNum: placedRowNum }) => Math.abs(rowNum - placedRowNum))
+                    );
 
-              // Update score
-              const score = (props.gameData?.score ?? 0) + pieceScore(activePiece);
-
-              // Clear any rows or columns that are full
-              const clearedRows = boardState
-                .map((row, rowNum) => ({ row, rowNum }))
-                .filter(({ row }) => row.every(block => block !== BlockType.EMPTY))
-                .map(({ rowNum }) => rowNum);
-              const clearedCols = boardState[0]
-                .map((_, colNum) => ({ col: boardState.map(row => (row[colNum])), colNum }))
-                .filter(({ col }) => col.every(block => block !== BlockType.EMPTY))
-                .map(({ colNum }) => colNum);
-              const placedBlocksInClearedRows = placedBlocks.filter(({ rowNum }) => clearedRows.includes(rowNum));
-              const placedBlocksInClearedCols = placedBlocks.filter(({ colNum }) => clearedCols.includes(colNum));
-              const clearedBlocks: BoardCellAddress[] = [];
-              const clearedBlockOverlays: BoardCellOverlay[] = [];
-
-              clearedRows.forEach(rowNum => {
-                clearedBlocks.push(...boardState[rowNum].map((_, colNum) => ({ rowNum, colNum })));
-              });
-              clearedCols.forEach(colNum => boardState.forEach((row, rowNum) => {
-                if (!clearedRows.includes(rowNum)) {
-                  clearedBlocks.push({ rowNum, colNum });
-                }
-              }));
-
-              clearedBlocks.forEach(({ rowNum, colNum }) => {
-                if (!props.disableAnimations) {
-                  const nearestClearedPlacedBlockDistance = Math.min(
-                    ...placedBlocksInClearedRows
-                      .filter(({ rowNum: placedRowNum }) => rowNum === placedRowNum)
-                      .map(({ colNum: placedColNum }) => Math.abs(colNum - placedColNum)),
-                    ...placedBlocksInClearedCols
-                      .filter(({ colNum: placedColNum }) => colNum === placedColNum)
-                      .map(({ rowNum: placedRowNum }) => Math.abs(rowNum - placedRowNum))
-                  );
-
-                  clearedBlockOverlays.push({
-                    colNum,
-                    content: (
-                      <div
-                        className="Game-clearedBlockOverlay"
-                        style={{
-                          animationDelay: `${nearestClearedPlacedBlockDistance * 0.1}s`
-                        }}
-                      >
-                        <Block
-                          type={boardState[rowNum][colNum]}
-                        />
-                      </div>
-                    ),
-                    key: `${rowNum},${colNum},${activePieceIndex},${seed}`,
-                    rowNum
-                  });
-                }
-
-                boardState[rowNum][colNum] = BlockType.EMPTY;
-              });
-
-              if (clearedBlockOverlays.length) {
-                setCellOverlays(new Set([
-                  // TODO: Make cleared block overlays remove themselves after the animation so that this doesn't need to clear all existing overlays
-                  // ...cellOverlays,
-                  ...clearedBlockOverlays
-                ]));
-              }
-
-              // Save game data
-              const gameData = {
-                boardState,
-                highScore: Math.max(props.gameData?.highScore ?? 0, score),
-                piecesUsed: allPiecesUsed ? Array.from({ length: numPieces }, () => false) : piecesUsed,
-                score,
-                seed
-              };
-
-              props.onSave?.(gameData);
-
-              // Loss detection
-              const pieces = getPieces(numPieces, gameData.seed);
-
-              if (pieces.every((piece, i) =>
-                gameData.piecesUsed[i] || boardState.every((row, rowNum) => row.every((_, colNum) =>
-                  !pieceFitsOnBoard(boardState, piece, { rowNum, colNum })
-                ))
-              )) {
-                window.setTimeout(() => {
-                  if (window.confirm('No more moves! Start a new game?')) {
-                    props.onSave?.(newGameData(gameData));
+                    clearedBlockOverlays.push({
+                      colNum,
+                      content: (
+                        <div
+                          className="Game-clearedBlockOverlay"
+                          style={{
+                            animationDelay: `${nearestClearedPlacedBlockDistance * 0.1}s`
+                          }}
+                        >
+                          <Block
+                            type={boardState[rowNum][colNum]}
+                          />
+                        </div>
+                      ),
+                      key: `${rowNum},${colNum},${activePieceIndex},${seed}`,
+                      rowNum
+                    });
                   }
-                }, 1500);
+
+                  boardState[rowNum][colNum] = BlockType.EMPTY;
+                });
+
+                if (clearedBlockOverlays.length) {
+                  setCellOverlays(new Set([
+                    // TODO: Make cleared block overlays remove themselves after the animation so that this doesn't need to clear all existing overlays
+                    // ...cellOverlays,
+                    ...clearedBlockOverlays
+                  ]));
+                }
+
+                // Save game data
+                const gameData = {
+                  boardState,
+                  highScore: Math.max(props.gameData?.highScore ?? 0, score),
+                  piecesUsed: allPiecesUsed ? Array.from({ length: numPieces }, () => false) : piecesUsed,
+                  score,
+                  seed
+                };
+
+                props.onSave?.(gameData);
+
+                // Loss detection
+                const pieces = getPieces(numPieces, gameData.seed);
+
+                if (pieces.every((piece, i) =>
+                  gameData.piecesUsed[i] || boardState.every((row, rowNum) => row.every((_, colNum) =>
+                    !pieceFitsOnBoard(boardState, piece, { rowNum, colNum })
+                  ))
+                )) {
+                  window.setTimeout(() => {
+                    if (window.confirm('No more moves! Start a new game?')) {
+                      props.onSave?.(newGameData(gameData));
+                    }
+                  }, 1500);
+                }
               }
             }
-          }
 
-          clearActivePiece();
-        }}
-        onDragOver={event => setActiveCell(event.over?.data.current ? {
-          colNum: event.over.data.current.colNum,
-          rowNum: event.over.data.current.rowNum
-        } : null)}
-        onDragStart={event => {
-          setActivePiece(event.active.data.current?.pieceData ?? null)
-          setActivePieceIndex(event.active.data.current?.pieceIndex ?? null)
-        }}
-      >
-        <GameMain
-          activeCell={activeCell}
-          boardCellOverlays={cellOverlays}
-          boardCellRef={boardCellRef}
-          activePiece={activePiece}
-          gameData={props.gameData}
-        />
-        <DragOverlay
-          dropAnimation={props.disableAnimations ? null : undefined}
+            clearActivePiece();
+          }}
+          onDragOver={event => setActiveCell(event.over?.data.current ? {
+            colNum: event.over.data.current.colNum,
+            rowNum: event.over.data.current.rowNum
+          } : null)}
+          onDragStart={event => {
+            setActivePiece(event.active.data.current?.pieceData ?? null)
+            setActivePieceIndex(event.active.data.current?.pieceIndex ?? null)
+          }}
         >
-          {activePiece && boardCellRef.current && (
-            <div
-              className="Game-activePieceWrapper"
-              style={{
-                left: `calc(${activePieceBlockOffset * 1 + boardGridGapSize}px - 50%)`,
-              }}
-            >
-              <Piece
-                blockSize={boardCellRef.current?.offsetWidth}
-                className="Game-activePiece"
-                pieceData={activePiece}
-              />
-            </div>
-          )}
-        </DragOverlay>
-      </DndContext>
+          <GameMain
+            activeCell={activeCell}
+            boardCellOverlays={cellOverlays}
+            boardCellRef={boardCellRef}
+            activePiece={activePiece}
+            gameData={props.gameData}
+          />
+          <DragOverlay
+            dropAnimation={props.disableAnimations ? null : undefined}
+          >
+            {activePiece && boardCellRef.current && (
+              <div
+                className="Game-activePieceWrapper"
+                style={{
+                  left: `calc(${activePieceBlockOffset * 1 + boardGridGapSize}px - 50%)`,
+                }}
+              >
+                <Piece
+                  blockSize={boardCellRef.current?.offsetWidth}
+                  className="Game-activePiece"
+                  pieceData={activePiece}
+                />
+              </div>
+            )}
+          </DragOverlay>
+        </DndContext>
+      </div>
     </div>
   );
 }
@@ -238,7 +240,7 @@ function GameMain(props: {
   const pieces = props.gameData?.seed ? getPieces(numPieces, props.gameData.seed) : [];
 
   return (
-    <div className="Game-main">
+    <>
       <Board
         activeCell={props.activeCell}
         cellOverlays={props.boardCellOverlays}
@@ -262,7 +264,7 @@ function GameMain(props: {
           );
         })}
       </div>
-    </div>
+    </>
   );
 }
 
