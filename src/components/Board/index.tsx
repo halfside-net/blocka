@@ -1,7 +1,7 @@
 import './index.scss';
 import { useDroppable } from '@dnd-kit/core';
 import Block from '~/components/Block';
-import { BlockType } from '~/components/Block/types';
+import { BlockType } from '~/components/Block/constants';
 import { PieceData } from '~/components/Piece/types';
 import { boardGridGapSize } from './constants';
 import { generateBoardState, getCellId, getPieceBlockForCell, pieceFitsOnBoard } from './helpers';

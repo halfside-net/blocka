@@ -7,7 +7,7 @@ import { boardGridGapSize } from '~/components/Board/constants';
 import { generateBoardState, pieceFitsOnBoard } from '~/components/Board/helpers';
 import type { BoardCellAddress, BoardCellOverlay } from '~/components/Board/types';
 import Block from '~/components/Block';
-import { BlockType } from '~/components/Block/types';
+import { BlockType } from '~/components/Block/constants';
 import Piece from '~/components/Piece';
 import { pieceScore } from '~/components/Piece/helpers';
 import type { PieceData } from '~/components/Piece/types';

@@ -1,5 +1,5 @@
 import './index.scss';
-import { BlockType } from './types';
+import { BlockType } from './constants';
 
 export default function Block(props: {
   isPreview?: boolean;

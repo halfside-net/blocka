@@ -1,4 +1,4 @@
-import { BlockType } from '~/components/Block/types';
+import { BlockType } from '~/components/Block/constants';
 import type { PieceData } from '~/components/Piece/types';
 import { rotatePiece } from './helpers';
 

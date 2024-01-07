@@ -1,7 +1,7 @@
 import './index.scss';
 import { boardGridGapSize } from '~/components/Board/constants';
 import Block from '~/components/Block';
-import { BlockType } from '~/components/Block/types';
+import { BlockType } from '~/components/Block/constants';
 import type { PieceData } from './types';
 
 export default function Piece(props: {

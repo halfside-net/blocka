@@ -1,6 +1,6 @@
-import { mulberry32Generator } from '~/ts/helpers';
+import { BlockType } from '~/components/Block/constants';
 import type { PieceData } from '~/components/Piece/types';
-import { BlockType } from '../Block/types';
+import { mulberry32Generator } from '~/ts/helpers';
 import { piecePool } from './constants';
 import type { GameData } from './types';
 
