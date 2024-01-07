@@ -4,6 +4,7 @@ import { description, siteDomain, sitePath, themeColor, title } from '../sitecon
 import favicon from '~/assets/images/icon.png?w=64';
 import appleTouchIcon from '~/assets/images/icon.png?w=180';
 import App from '~/components/App';
+import { render as renderManifest } from './webmanifest.json.page.client';
 
 export function PageHead() {
   const { urlPathname } = usePageContext();
@@ -25,7 +26,7 @@ export function PageHead() {
 
       <meta name="theme-color" content={themeColor} />
 
-      <link rel="manifest" href={sitePath + 'webmanifest.json'} />
+      <link rel="manifest" href={import.meta.env.PROD ? sitePath + 'webmanifest.json' : 'data:application/json;base64,' + btoa(renderManifest())} />
 
       <link rel="canonical" href={url} />
 
