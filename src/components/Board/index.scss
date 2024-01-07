@@ -15,9 +15,6 @@
     height: 100%;
     width: 100%;
     background-color: $Board-divider-color;
-    padding: calc(100% / (1 + var(--board-size) * #{1 + math.div(1, $block-gap-to-size-ratio)}));
-    grid-template-columns: repeat(var(--board-size), 1fr);
-    gap: calc(100% / (1 + var(--board-size) * #{1 + math.div(1, $block-gap-to-size-ratio)}));
   }
 
   &-cell {

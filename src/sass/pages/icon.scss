@@ -5,8 +5,6 @@
 $icon-size: 512px;
 
 .Icon {
-  --block-gap-ratio: #{$block-gap-to-size-ratio};
-
   height: $icon-size;
   width: $icon-size;
   background: $page-background;

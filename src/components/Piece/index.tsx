@@ -1,4 +1,5 @@
 import './index.scss';
+import { boardGridGapSize } from '~/components/Board/constants';
 import Block from '~/components/Block';
 import { BlockType } from '~/components/Block/types';
 import type { PieceData } from './types';
@@ -25,10 +26,10 @@ export default function Piece(props: {
       className={`Piece ${props.className ?? ''}`}
       style={{
         ...props.additionalStyles,
-        gap: `calc(100% / (${numRows} / var(--block-gap-ratio) + ${numRows - 1})) calc(100% / (${numCols} / var(--block-gap-ratio) + ${numCols - 1}))`,
+        gap: `${100 / (numRows / boardGridGapSize + numRows - 1)}% ${100 / (numCols / boardGridGapSize + numCols - 1)}%`,
         gridTemplate: `repeat(${numRows}, 1fr) / repeat(${numCols}, 1fr)`,
-        height: props.blockSize ? `calc(${numRows * props.blockSize}px + ${(numRows - 1) * props.blockSize}px * var(--block-gap-ratio))` : `calc(100% * (${numRows} + ${numRows - 1} * var(--block-gap-ratio)) / (${gridSize} + ${gridSize - 1} * var(--block-gap-ratio)))`,
-        width: props.blockSize ? `calc(${numCols * props.blockSize}px + ${(numCols - 1) * props.blockSize}px * var(--block-gap-ratio))` : `calc(100% * (${numCols} + ${numCols - 1} * var(--block-gap-ratio)) / (${gridSize} + ${gridSize - 1} * var(--block-gap-ratio)))`
+        height: props.blockSize ? `${props.blockSize * (numRows + (numRows - 1) * boardGridGapSize)}px` : `${100 * (numRows + (numRows - 1) * boardGridGapSize) / (gridSize + (gridSize - 1) * boardGridGapSize)}%`,
+        width: props.blockSize ? `${props.blockSize * (numCols + (numCols - 1) * boardGridGapSize)}px` : `${100 * (numCols + (numCols - 1) * boardGridGapSize) / (gridSize + (gridSize - 1) * boardGridGapSize)}%`
       }}
     >
       {pieceData.map((row, rowNum) => row.map((blockType, colNum) => (

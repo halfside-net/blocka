@@ -3,6 +3,7 @@ import { useDroppable } from '@dnd-kit/core';
 import Block from '~/components/Block';
 import { BlockType } from '~/components/Block/types';
 import { PieceData } from '~/components/Piece/types';
+import { boardGridGapSize } from './constants';
 import { generateBoardState, getCellId, getPieceBlockForCell, pieceFitsOnBoard } from './helpers';
 import type { BoardCellAddress, BoardCellOverlay, BoardState } from './types';
 
@@ -15,6 +16,7 @@ export default function Board(props: {
   size: number;
   state?: BoardState;
 }) {
+  const boardGapAsPercent = `${100 / (1 + props.size * (1 + 1 / boardGridGapSize))}%`;
   const boardState = generateBoardState(props.size, props.state);
   const cellIdToOverlays = Array.from(props.cellOverlays ?? [])
     .reduce<Record<string, BoardCellOverlay[]>>((acc, cellOverlay) => {
@@ -26,7 +28,14 @@ export default function Board(props: {
 
   return (
     <div className={`Board ${props.className ?? ''}`}>
-      <div className="Board-grid">
+      <div
+        className="Board-grid"
+        style={{
+          gap: boardGapAsPercent,
+          gridTemplateColumns: `repeat(${props.size}, 1fr)`,
+          padding: boardGapAsPercent
+        }}
+      >
         {boardState.map((row, rowNum) => row.map((blockType, colNum) => {
           const id = getCellId(rowNum, colNum);
           const previewBlock = activePieceFits ? getPieceBlockForCell(props.activePiece!, props.activeCell!, rowNum, colNum) : undefined;

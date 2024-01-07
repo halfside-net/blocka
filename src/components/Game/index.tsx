@@ -3,6 +3,7 @@ import { DndContext, DragOverlay, useDraggable } from '@dnd-kit/core';
 import { useRef, useState } from 'react';
 import { ReactComponent as TrophySVG } from '~/assets/images/trophy.svg';
 import Board from '~/components/Board';
+import { boardGridGapSize } from '~/components/Board/constants';
 import { generateBoardState, pieceFitsOnBoard } from '~/components/Board/helpers';
 import type { BoardCellAddress, BoardCellOverlay } from '~/components/Board/types';
 import Block from '~/components/Block';
@@ -211,7 +212,7 @@ export default function Game(props: {
             <div
               className="Game-activePieceWrapper"
               style={{
-                left: `calc(${activePieceBlockOffset}px * (1 + var(--block-gap-ratio)) - 50%)`,
+                left: `calc(${activePieceBlockOffset * 1 + boardGridGapSize}px - 50%)`,
               }}
             >
               <Piece
