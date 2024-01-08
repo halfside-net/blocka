@@ -1,6 +1,6 @@
 import './index.scss';
 import { DndContext, DragOverlay, useDraggable } from '@dnd-kit/core';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ReactComponent as TrophySVG } from '~/assets/images/trophy.svg';
 import Board from '~/components/Board';
 import { boardGridGapSize } from '~/components/Board/constants';
@@ -17,6 +17,11 @@ import type { GameData } from './types';
 
 const maxPieceSize = Math.max(...piecePool.map(pieceData => Math.max(pieceData.length, ...pieceData.map(row => row.length))));
 
+function preventDefaultTouchMove(e: TouchEvent) {
+  e.preventDefault();
+  e.stopPropagation();
+}
+
 export default function Game(props: {
   disableAnimations?: boolean;
   gameData?: GameData;
@@ -28,6 +33,7 @@ export default function Game(props: {
   const [cellOverlays, setCellOverlays] = useState(new Set<BoardCellOverlay>());
 
   const boardCellRef = useRef<HTMLElement>();
+  const gameRef = useRef<HTMLDivElement>(null);
 
   const activePieceBlockOffset = activePiece ? (activePiece[0].length - 1) * (boardCellRef.current?.offsetWidth ?? 0) / 2 : 0;
 
@@ -37,9 +43,21 @@ export default function Game(props: {
     setActivePieceIndex(null);
   }
 
+  useEffect(() => {
+    gameRef.current?.addEventListener('touchmove', preventDefaultTouchMove, {
+      capture: false,
+      passive: false
+    });
+
+    return () => {
+      gameRef.current?.removeEventListener('touchmove', preventDefaultTouchMove);
+    }
+  }, [gameRef.current]);
+
   return (
     <div
       className="Game"
+      ref={gameRef}
       style={{
         ['--board-size' as string]: boardSize,
         ['--num-pieces' as string]: numPieces
