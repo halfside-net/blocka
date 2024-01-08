@@ -1,5 +1,5 @@
 import './index.scss';
-import { title } from '../../../siteconfig.json';
+import { title, titleShort } from '../../../siteconfig.json';
 import logo from '~/assets/images/icon_transparent.png?as=metadata';
 
 export default function Home(props: {
@@ -12,7 +12,7 @@ export default function Home(props: {
         {title}
       </h1>
       <img
-        alt="Blocka"
+        alt={titleShort}
         className="Home-logo"
         height={logo.height}
         src={logo.src}
