@@ -77,19 +77,27 @@
 
   &-pieceSlot {
     display: flex;
+    position: relative;
     box-shadow: $Game-pieces-shadow;
     width: 0;
-    aspect-ratio: 1;
     flex-grow: 1;
     border-radius: $Game-pieces-border-radius;
     background: $Game-pieces-background;
-    padding: $Game-pieces-padding;
+
+    &::after {
+      width: 100%;
+      padding-top: 100%; // aspect-ratio: 1
+      content: '';
+    }
   }
 
   &-pieceWrapper {
     display: flex;
-    position: relative;
-    width: 100%;
+    position: absolute;
+    top: $Game-pieces-padding;
+    left: $Game-pieces-padding;
+    height: calc(100% - #{2 * $Game-pieces-padding});
+    width: calc(100% - #{2 * $Game-pieces-padding});
     justify-content: center;
     align-items: center;
   }
