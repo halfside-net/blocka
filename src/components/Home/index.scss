@@ -15,6 +15,10 @@
   justify-content: center;
   align-items: center;
 
+  &-title {
+    display: none;
+  }
+
   &-logo {
     margin-bottom: $Home-logo-margin-bottom;
     height: 0;
