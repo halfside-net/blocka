@@ -1,5 +1,5 @@
 import './index.scss';
-import { title, titleShort } from '../../../siteconfig.json';
+import { titleShort } from '../../../siteconfig.json';
 import logo from '~/assets/images/icon_transparent.png?as=metadata';
 
 export default function Home(props: {
@@ -8,9 +8,6 @@ export default function Home(props: {
 }) {
   return (
     <div className="Home">
-      <h1 className="Home-title">
-        {title}
-      </h1>
       <img
         alt={titleShort}
         className="Home-logo"
