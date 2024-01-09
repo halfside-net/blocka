@@ -33,7 +33,6 @@ export default function Game(props: {
   const [cellOverlays, setCellOverlays] = useState(new Set<BoardCellOverlay>());
 
   const boardCellRef = useRef<HTMLElement>();
-  const gameRef = useRef<HTMLDivElement>(null);
 
   const activePieceBlockOffset = activePiece ? (activePiece[0].length - 1) * (boardCellRef.current?.offsetWidth ?? 0) / 2 : 0;
 
@@ -43,21 +42,9 @@ export default function Game(props: {
     setActivePieceIndex(null);
   }
 
-  useEffect(() => {
-    gameRef.current?.addEventListener('touchmove', preventDefaultTouchMove, {
-      capture: false,
-      passive: false
-    });
-
-    return () => {
-      gameRef.current?.removeEventListener('touchmove', preventDefaultTouchMove);
-    }
-  }, [gameRef.current]);
-
   return (
     <div
       className="Game"
-      ref={gameRef}
       style={{
         ['--board-size' as string]: boardSize,
         ['--num-pieces' as string]: numPieces
@@ -293,6 +280,7 @@ function GamePieceSlot(props: {
   pieceIndex: number;
   used?: boolean;
 }) {
+  const pieceSlotRef = useRef<HTMLDivElement | null>();
 
   const { attributes, isDragging, listeners, setActivatorNodeRef, setNodeRef } = useDraggable({
     attributes: {
@@ -305,12 +293,26 @@ function GamePieceSlot(props: {
     id: props.id
   });
 
+  useEffect(() => {
+    pieceSlotRef.current?.addEventListener('touchmove', preventDefaultTouchMove, {
+      capture: false,
+      passive: false
+    });
+
+    return () => {
+      pieceSlotRef.current?.removeEventListener('touchmove', preventDefaultTouchMove);
+    }
+  }, [pieceSlotRef.current]);
+
   return (
     <div className="Game-pieceSlot">
       {!props.used && (
         <div
           className="Game-pieceWrapper"
-          ref={setActivatorNodeRef}
+          ref={element => {
+            pieceSlotRef.current = element;
+            setActivatorNodeRef(element);
+          }}
           {...attributes}
           {...listeners}
         >

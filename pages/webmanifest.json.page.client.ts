@@ -23,6 +23,6 @@ export function render() {
     scope: sitePath,
     short_name: titleShort,
     start_url: sitePath,
-    theme_color: themeColor,
+    theme_color: themeColor
   });
 }
