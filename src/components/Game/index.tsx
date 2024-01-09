@@ -1,6 +1,6 @@
 import './index.scss';
 import { DndContext, DragOverlay, useDraggable } from '@dnd-kit/core';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { ReactComponent as TrophySVG } from '~/assets/images/trophy.svg';
 import Board from '~/components/Board';
 import { boardGridGapSize } from '~/components/Board/constants';
@@ -16,11 +16,6 @@ import { newGameDataSeed, getPieces, newGameData } from './helpers';
 import type { GameData } from './types';
 
 const maxPieceSize = Math.max(...piecePool.map(pieceData => Math.max(pieceData.length, ...pieceData.map(row => row.length))));
-
-function preventDefaultTouchMove(e: TouchEvent) {
-  e.preventDefault();
-  e.stopPropagation();
-}
 
 export default function Game(props: {
   disableAnimations?: boolean;
@@ -280,8 +275,6 @@ function GamePieceSlot(props: {
   pieceIndex: number;
   used?: boolean;
 }) {
-  const pieceSlotRef = useRef<HTMLDivElement | null>();
-
   const { attributes, isDragging, listeners, setActivatorNodeRef, setNodeRef } = useDraggable({
     attributes: {
       roleDescription: 'Draggable piece'
@@ -293,26 +286,12 @@ function GamePieceSlot(props: {
     id: props.id
   });
 
-  useEffect(() => {
-    pieceSlotRef.current?.addEventListener('touchmove', preventDefaultTouchMove, {
-      capture: false,
-      passive: false
-    });
-
-    return () => {
-      pieceSlotRef.current?.removeEventListener('touchmove', preventDefaultTouchMove);
-    }
-  }, [pieceSlotRef.current]);
-
   return (
     <div className="Game-pieceSlot">
       {!props.used && (
         <div
           className="Game-pieceWrapper"
-          ref={element => {
-            pieceSlotRef.current = element;
-            setActivatorNodeRef(element);
-          }}
+          ref={setActivatorNodeRef}
           {...attributes}
           {...listeners}
         >
