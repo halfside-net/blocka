@@ -1,6 +1,6 @@
 import './index.scss';
 import { titleShort } from '../../../siteconfig.json';
-import logo from '~/assets/images/icon_transparent.png?as=metadata';
+import logo from '~/assets/images/icon_transparent.png';
 
 export default function Home(props: {
   onNewGame?: () => void;
@@ -11,9 +11,7 @@ export default function Home(props: {
       <img
         alt={titleShort}
         className="Home-logo"
-        height={logo.height}
-        src={logo.src}
-        width={logo.width}
+        src={logo}
       />
       <div className="Home-buttons">
         <button
