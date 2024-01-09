@@ -1,4 +1,4 @@
-import type { BlockType } from '~/components/Block/types';
+import type { BlockType } from '~/components/Block/constants';
 
 export type BoardCellAddress = {
   colNum: number;

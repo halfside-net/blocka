@@ -2,7 +2,7 @@ import '~/sass/pages/icon.scss';
 import { toPng, toSvg } from 'html-to-image';
 import { useRef, useState } from 'react';
 import Board from '~/components/Board';
-import { BlockType } from '~/components/Block/types';
+import { BlockType } from '~/components/Block/constants';
 
 const titleBlocks = [
   [ ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ],
