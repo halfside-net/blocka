@@ -1,0 +1,1 @@
+var o="In this relaxing yet addicting puzzle game, place blocks on the board filling lines to clear space for more. Run out of space, and you lose! How high can you score?",t="www.halfside.net",e="/blocka/",s="#3e2727",a="Blocka",c="Blocka";export{e as a,a as b,s as c,o as d,t as s,c as t};

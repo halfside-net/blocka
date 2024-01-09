@@ -1,0 +1,1 @@
+import{R as n,r,a}from"./chunk-c99e57a5.js";var e=n.createContext(void 0);function x(b){var{pageContext:c,children:d}=b;return a(e.Provider,{value:c,children:d})}function u(){return r.useContext(e)}export{x as P,u};
