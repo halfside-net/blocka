@@ -12,6 +12,7 @@
     $Game-padding-bottom;
   flex-direction: column;
   justify-content: center;
+  user-select: none;
 
   &-header {
     margin-bottom: $Game-header-gap;
@@ -54,7 +55,6 @@
     flex-grow: 1;
     flex-direction: column;
     justify-content: center;
-    user-select: none;
 
     // Use svh if supported, for browsers with floating address bar
     @supports(max-width: 100svh) {
