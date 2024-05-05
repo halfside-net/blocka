@@ -1,6 +1,10 @@
 @import '~/sass/base.scss';
 @import '~/sass/common.scss';
 
+* {
+  touch-action: manipulation;
+}
+
 html,
 body,
 #react-root {
@@ -15,6 +19,5 @@ html {
   top: 0;
   left: 0;
   transform: scale(1);
-  touch-action: none;
   background: $page-background;
 }
