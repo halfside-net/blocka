@@ -32,6 +32,9 @@
     "workbox-core": "7.3.0",
     "workbox-window": "7.3.0"
   },
+  "engines": {
+    "node": ">=18"
+  },
   "name": "blocka",
   "private": true,
   "scripts": {
