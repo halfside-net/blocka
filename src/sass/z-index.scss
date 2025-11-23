@@ -1,34 +1,28 @@
+@use "sass:list";
+@use "sass:map";
+
 // This is a representation of all stacking contexts and elements with nonzero z-index values.
 // Each list within the list represents a child stacking context.
 // Identifiers within each list are ordered in decreasing z-index.
 // '...' represents all elements with zero or auto z-index.
 // If '...' is not present, the last non-list item will be assigned z-index: 0.
 // You can create a new stacking context while keeping the element's z-index 0 by making it a
-// single-item list, like ['identifier'].
-$z-stacks: [
-  'appSettingsButton',
-  'appSettings',
-  'appHome',
-  'appLevelselectButton',
-  'appLevelselect',
-  [
-    'wordHelpText',
-    'focusedWord',
-    [
-      'wordPlaceholder',
-      '...',
-    ],
-    'word',
-    '...',
-  ],
-  ['appLevel'],
-  '...',
-];
+// single-item list, like ('identifier').
+$z-stacks: (
+  "appSettingsButton",
+  "appSettings",
+  "appHome",
+  "appLevelselectButton",
+  "appLevelselect",
+  ("wordHelpText", "focusedWord", ("wordPlaceholder", "..."), "word", "..."),
+  ("appLevel"),
+  "..."
+);
 
 // -------- DO NOT EDIT BELOW THIS POINT! --------
 // Only edit $z-stacks above and use `@mixin z-index(identifier)` to retrieve a z-index value.
 
-@function parse-z-stacks($z-stacks) {
+@function -parse-z-stacks($z-stacks) {
   $current-z-index: -1;
   $z-index-map: ();
 
@@ -37,10 +31,10 @@ $z-stacks: [
     $break: false;
 
     // Add 1 to starting z-index for every identifier until we hit '...' or the end of the list
-    @if not $break and not is-bracketed($stack) {
+    @if not $break and not list.is-bracketed($stack) {
       $current-z-index: $current-z-index + 1;
 
-      @if $stack == '...' {
+      @if $stack =="..." {
         $break: true;
       }
     }
@@ -48,12 +42,16 @@ $z-stacks: [
 
   // Transform $z-stacks into a map
   @each $stack in $z-stacks {
-    @if is-bracketed($stack) {
-      $z-index-map: map-merge($z-index-map, parse-z-stacks($stack));
-    }
-    @else {
-      @if $stack != '...' {
-        $z-index-map: map-merge($z-index-map, ($stack: $current-z-index));
+    @if list.is-bracketed($stack) {
+      $z-index-map: map.merge($z-index-map, -parse-z-stacks($stack));
+    } @else {
+      @if $stack !="..." {
+        $z-index-map: map.merge(
+          $z-index-map,
+          (
+            $stack: $current-z-index,
+          )
+        );
       }
 
       $current-z-index: $current-z-index - 1;
@@ -63,8 +61,8 @@ $z-stacks: [
   @return $z-index-map;
 }
 
-$z-index-map: parse-z-stacks($z-stacks);
+$z-index-map: -parse-z-stacks($z-stacks);
 
 @mixin z-index($identifier) {
-  z-index: map-get($z-index-map, $identifier);
+  z-index: map.get($z-index-map, $identifier);
 }

@@ -1,7 +1,3 @@
-@import '~/sass/common.scss';
-
-/** @define Piece */
-
-.Piece {
-  display: grid;
-}
+@forward "index.module" with (
+  $emit: false !default
+);

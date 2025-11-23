@@ -1,0 +1,199 @@
+@use "../../sass/variables";
+@use "../Board";
+
+$dragging-piece-offset-top: -80px;
+$header-gap: 16px;
+$padding-bottom: 2 * variables.$container-padding;
+$padding-side: variables.$container-padding;
+$padding-top: variables.$container-padding;
+$pieces-background: Board.$background-color;
+$pieces-border-radius: variables.$border-radius-default;
+$pieces-gap: 16px;
+$pieces-padding: 8px;
+$pieces-shadow: variables.$shadow-inset-default;
+$score-background-color: variables.$theme-color-dark;
+$score-border-radius: variables.$border-radius-default;
+$score-shadow: variables.$shadow-inset-default;
+$score-color: variables.$theme-color-light;
+$score-font-size: 16px;
+$score-font-weight: bold;
+$score-line-height: 1.2;
+$score-padding-side: 12px;
+$score-padding-vertical: 8px;
+$scores-padding-side: variables.$header-height;
+
+$score-padding: $score-padding-vertical $score-padding-side;
+
+$emit: true !default;
+@if $emit {
+  .Game {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    padding: $padding-top $padding-side $padding-bottom;
+    flex-direction: column;
+    justify-content: center;
+    user-select: none;
+
+    &_header {
+      margin-bottom: $header-gap;
+    }
+
+    &_scores {
+      display: grid;
+      padding: 0 $scores-padding-side;
+      grid-template-columns: 1fr 1fr;
+      gap: $header-gap;
+    }
+
+    &_score {
+      display: flex;
+      box-shadow: $score-shadow;
+      border-radius: $score-border-radius;
+      background-color: $score-background-color;
+      padding: $score-padding;
+      justify-content: flex-end;
+      gap: 0.5ch;
+      line-height: $score-line-height;
+      color: $score-color;
+      font-size: $score-font-size;
+      font-weight: $score-font-weight;
+      white-space: pre;
+    }
+
+    &_scoreIcon {
+      margin-right: auto;
+      height: $score-line-height * $score-font-size;
+    }
+
+    &_main {
+      $total-main-fixed-vertical-space: $padding-top +
+        2 *
+        $score-padding-vertical +
+        $score-line-height *
+        $score-font-size +
+        $header-gap +
+        $pieces-gap +
+        $padding-bottom;
+
+      display: flex;
+      align-self: center;
+      width: 100%;
+      max-width: calc(
+        (
+            100vh -
+              #{$total-main-fixed-vertical-space -
+              $pieces-gap} -
+              #{$pieces-gap} /
+              var(--num-pieces)
+          ) /
+          (1 + 1 / var(--num-pieces))
+      );
+      flex-grow: 1;
+      flex-direction: column;
+      justify-content: center;
+
+      // Use svh if supported, for browsers with floating address bar
+      @supports (max-width: 100svh) {
+        max-width: calc(
+          (
+              100svh - #{$total-main-fixed-vertical-space - $pieces-gap} - #{$pieces-gap} /
+                var(--num-pieces)
+            ) / (1 + 1 / var(--num-pieces))
+        );
+      }
+    }
+
+    &_board {
+      max-height: calc(100vw - #{2 * $padding-side});
+      flex-grow: 1;
+    }
+
+    &_pieces {
+      display: flex;
+      margin-top: $pieces-gap;
+      justify-content: center;
+      align-items: flex-start;
+      gap: $pieces-gap;
+    }
+
+    &_pieceSlot {
+      display: flex;
+      position: relative;
+      box-shadow: $pieces-shadow;
+      width: 0;
+      flex-grow: 1;
+      border-radius: $pieces-border-radius;
+      background: $pieces-background;
+
+      &::after {
+        width: 100%;
+        padding-top: 100%; // aspect-ratio: 1
+        content: "";
+      }
+    }
+
+    &_pieceWrapper {
+      display: flex;
+      position: absolute;
+      top: $pieces-padding;
+      left: $pieces-padding;
+      height: calc(100% - #{2 * $pieces-padding});
+      width: calc(100% - #{2 * $pieces-padding});
+      justify-content: center;
+      align-items: center;
+    }
+
+    &_pieceDragAnchor {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    // Hide the piece when the drag anchor is being hidden
+    &_pieceDragAnchor[style*="opacity:"] + &_piece {
+      opacity: 0;
+    }
+
+    &_activePieceWrapper {
+      position: relative;
+      top: -50%;
+      margin-top: $dragging-piece-offset-top;
+      height: 100%;
+      width: 100%;
+    }
+
+    &_activePiece {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+    }
+
+    &_clearedBlockOverlay {
+      position: relative;
+      z-index: 1;
+      height: 100%;
+      width: 100%;
+      animation: clearedBlock 0.6s linear forwards;
+    }
+  }
+
+  // Cleared Block Animation
+  @keyframes clearedBlock {
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+
+    20% {
+      transform: scale(1.2) rotate(72deg);
+      opacity: 0.8;
+    }
+
+    100% {
+      transform: scale(0) rotate(360deg);
+      opacity: 0;
+    }
+  }
+}

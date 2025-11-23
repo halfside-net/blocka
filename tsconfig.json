@@ -1,32 +1,17 @@
 {
   "compilerOptions": {
-    "strict": true,
-    "module": "ES2020",
-    "target": "ES2020",
-    "moduleResolution": "Node",
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "types": ["vite/client"],
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
     "jsx": "react-jsx",
-    "skipLibCheck": true,
-    "esModuleInterop": true,
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "noEmit": true,
+    "plugins": [{ "name": "typescript-plugin-css-modules" }],
     "resolveJsonModule": true,
-    "paths": {
-      "~/*": [
-        "./src/*"
-      ],
-      "~/components/*": [
-        "./src/components/*",
-        "./src/components/*/index.tsx",
-        "./src/components/*/index.jsx"
-      ]
-    }
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "ESNext"
   },
-  "ts-node": {
-    "transpileOnly": true,
-    "esm": true,
-    "compilerOptions": {
-      "moduleResolution": "Node16"
-    }
-  },
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "include": ["src"]
 }

@@ -1,6 +1,6 @@
-import { BlockType } from '~/components/Block/constants';
-import type { PieceData } from '~/components/Piece/types';
-import { rotatePiece } from './helpers';
+import { PieceData } from "../../components/Piece/types";
+import { BlockType } from "../../schema/BlockType";
+import { rotatePiece } from "./helpers";
 
 // Board Configuration
 
@@ -9,46 +9,48 @@ export const numPieces = 3;
 
 // Piece Shapes
 
-export const square1: PieceData = [
-  [BlockType.NORMAL]
-];
+export const square1: PieceData = [[BlockType.NORMAL]];
 
 export const square2: PieceData = [
   [BlockType.NORMAL, BlockType.NORMAL],
-  [BlockType.NORMAL, BlockType.NORMAL]
+  [BlockType.NORMAL, BlockType.NORMAL],
 ];
 
 export const square3: PieceData = [
   [BlockType.NORMAL, BlockType.NORMAL, BlockType.NORMAL],
   [BlockType.NORMAL, BlockType.NORMAL, BlockType.NORMAL],
-  [BlockType.NORMAL, BlockType.NORMAL, BlockType.NORMAL]
+  [BlockType.NORMAL, BlockType.NORMAL, BlockType.NORMAL],
 ];
 
-export const straight2: PieceData = [
-  [BlockType.NORMAL, BlockType.NORMAL]
-];
+export const straight2: PieceData = [[BlockType.NORMAL, BlockType.NORMAL]];
 
 export const straight3: PieceData = [
-  [BlockType.NORMAL, BlockType.NORMAL, BlockType.NORMAL]
+  [BlockType.NORMAL, BlockType.NORMAL, BlockType.NORMAL],
 ];
 
 export const straight4: PieceData = [
-  [BlockType.NORMAL, BlockType.NORMAL, BlockType.NORMAL, BlockType.NORMAL]
+  [BlockType.NORMAL, BlockType.NORMAL, BlockType.NORMAL, BlockType.NORMAL],
 ];
 
 export const straight5: PieceData = [
-  [BlockType.NORMAL, BlockType.NORMAL, BlockType.NORMAL, BlockType.NORMAL, BlockType.NORMAL]
+  [
+    BlockType.NORMAL,
+    BlockType.NORMAL,
+    BlockType.NORMAL,
+    BlockType.NORMAL,
+    BlockType.NORMAL,
+  ],
 ];
 
 export const l2: PieceData = [
   [BlockType.NORMAL, BlockType.EMPTY],
-  [BlockType.NORMAL, BlockType.NORMAL]
+  [BlockType.NORMAL, BlockType.NORMAL],
 ];
 
 export const l3: PieceData = [
   [BlockType.NORMAL, BlockType.EMPTY, BlockType.EMPTY],
   [BlockType.NORMAL, BlockType.EMPTY, BlockType.EMPTY],
-  [BlockType.NORMAL, BlockType.NORMAL, BlockType.NORMAL]
+  [BlockType.NORMAL, BlockType.NORMAL, BlockType.NORMAL],
 ];
 
 // Piece Pool
@@ -74,5 +76,5 @@ export const piecePool: PieceData[] = [
   l3,
   rotatePiece(l3),
   rotatePiece(l3, 2),
-  rotatePiece(l3, 3)
+  rotatePiece(l3, 3),
 ];

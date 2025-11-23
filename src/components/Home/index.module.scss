@@ -1,0 +1,46 @@
+@use "../../sass/modules/Button";
+@use "../../sass/variables";
+
+$background: variables.$page-background;
+$button-gap: 16px;
+$logo-margin-bottom: 32px;
+$padding-bottom: 5vh;
+$padding-side: 32px;
+$padding-top: 5vh;
+
+$emit: true !default;
+@if $emit {
+  .Home {
+    display: flex;
+    height: 100%;
+    background: $background;
+    padding: $padding-top $padding-side $padding-bottom;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    &_logo {
+      margin-bottom: $logo-margin-bottom;
+      height: 0;
+      width: 100%;
+      flex-grow: 1;
+      object-fit: contain;
+    }
+
+    &_buttons {
+      display: flex;
+      flex-direction: column;
+      gap: $button-gap;
+    }
+
+    &_button {
+      @include Button.default($scale: 2);
+
+      flex-shrink: 0;
+
+      &__hidden {
+        visibility: hidden;
+      }
+    }
+  }
+}

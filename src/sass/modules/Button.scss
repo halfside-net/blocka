@@ -1,26 +1,21 @@
-@import '~/sass/common.scss';
+@use "../../sass/variables";
 
-/** @define Button */
+$background: variables.$theme-color-light;
+$border-style: solid;
+$border-color: variables.$theme-color-dark;
+$border-radius: 2 * variables.$border-radius-default;
+$border-width-base: 4px;
+$color: variables.$theme-color-dark;
+$font-size-base: 16px;
+$padding-left-right-base: 12px;
+$padding-top-bottom-base: 6px;
 
-%Button {
+@mixin default($scale: 1) {
+  border-radius: $border-radius;
+  border: $scale * $border-width-base $border-style $border-color;
+  background: $background;
+  padding: $scale * $padding-top-bottom-base $scale * $padding-left-right-base;
+  color: $color;
   text-align: center;
-
-  &--colored {
-    border-style: $Button-border-style;
-    border-color: $Button-border-color;
-    background: $Button-background;
-    color: $Button-color;
-  }
-
-  &--shaped {
-    border-radius: $Button-border-radius;
-  }
-}
-
-@mixin ButtonSize($scale: 1) {
-  border-width: $scale * $Button-border-width-base;
-  padding:
-    $scale * $Button-padding-top-bottom-base
-    $scale * $Button-padding-left-right-base;
-  font-size: $scale * $Button-font-size-base;
+  font-size: $scale * $font-size-base;
 }

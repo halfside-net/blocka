@@ -1,34 +1,3 @@
-@use 'sass:math';
-@import '~/sass/common.scss';
-
-/** @define Board */
-
-.Board {
-  box-shadow: $Board-shadow-inset;
-  border-radius: $Board-border-radius;
-  background-color: $Board-background-color;
-  padding: $Board-padding;
-
-  &-grid {
-    display: grid;
-    box-shadow: $Board-shadow;
-    height: 100%;
-    width: 100%;
-    background-color: $Board-divider-color;
-  }
-
-  &-cell {
-    position: relative;
-    box-shadow: $Board-shadow-inset;
-    border-radius: $block-border-radius;
-    background-color: $Board-background-color;
-  }
-
-  &-cellOverlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-  }
-}
+@forward "index.module" with (
+  $emit: false !default
+);

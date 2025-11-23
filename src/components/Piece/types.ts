@@ -1,3 +1,3 @@
-import { BlockType } from '~/components/Block/constants';
+import { BlockType } from "../../schema/BlockType";
 
 export type PieceData = BlockType[][];

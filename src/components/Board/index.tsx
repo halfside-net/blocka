@@ -1,59 +1,89 @@
-import './index.scss';
-import { useDroppable } from '@dnd-kit/core';
-import Block from '~/components/Block';
-import { BlockType } from '~/components/Block/constants';
-import { PieceData } from '~/components/Piece/types';
-import { boardGridGapSize } from './constants';
-import { generateBoardState, getCellId, getPieceBlockForCell, pieceFitsOnBoard } from './helpers';
-import type { BoardCellAddress, BoardCellOverlay, BoardState } from './types';
+import { useDroppable } from "@dnd-kit/core";
+import c from "classnames";
+import Block from "../../components/Block";
+import { PieceData } from "../../components/Piece/types";
+import { BlockType } from "../../schema/BlockType";
+import { BoardState } from "../../schema/GameData";
+import { boardGridGapSize } from "./constants";
+import {
+  generateBoardState,
+  getCellId,
+  getPieceBlockForCell,
+  pieceFitsOnBoard,
+} from "./helpers";
+import s from "./index.module.scss";
+import { BoardCellAddress, BoardCellOverlay } from "./types";
 
 export default function Board(props: {
   activeCell?: BoardCellAddress | null;
   cellOverlays?: Set<BoardCellOverlay>;
-  cellRef?: React.MutableRefObject<HTMLElement | undefined>; // Reference to the first cell on the board
+  /**
+   * Reference to the first cell on the board
+   */
+  cellRef?: React.MutableRefObject<HTMLElement | undefined>;
   className?: string;
   activePiece?: PieceData | null;
   size: number;
   state?: BoardState;
 }) {
-  const boardGapAsPercent = `${100 / (1 + props.size * (1 + 1 / boardGridGapSize))}%`;
+  const boardGapAsPercent = `${
+    100 / (1 + props.size * (1 + 1 / boardGridGapSize))
+  }%`;
   const boardState = generateBoardState(props.size, props.state);
-  const cellIdToOverlays = Array.from(props.cellOverlays ?? [])
-    .reduce<Record<string, BoardCellOverlay[]>>((acc, cellOverlay) => {
-      (acc[getCellId(cellOverlay.rowNum, cellOverlay.colNum)] ??= []).push(cellOverlay);
-      return acc;
-    }, {});
+  const cellIdToOverlays = Array.from(props.cellOverlays ?? []).reduce<
+    Record<string, BoardCellOverlay[]>
+  >((acc, cellOverlay) => {
+    (acc[getCellId(cellOverlay.rowNum, cellOverlay.colNum)] ??= []).push(
+      cellOverlay
+    );
+    return acc;
+  }, {});
 
-  const activePieceFits = props.activePiece && props.activeCell && pieceFitsOnBoard(boardState, props.activePiece, props.activeCell);
+  const activePieceFits =
+    props.activePiece &&
+    props.activeCell &&
+    pieceFitsOnBoard(boardState, props.activePiece, props.activeCell);
 
   return (
-    <div className={`Board ${props.className ?? ''}`}>
+    <div className={c(s.Board, props.className)}>
       <div
-        className="Board-grid"
+        className={s.Board_grid}
         style={{
           gap: boardGapAsPercent,
           gridTemplateColumns: `repeat(${props.size}, 1fr)`,
-          padding: boardGapAsPercent
+          padding: boardGapAsPercent,
         }}
       >
-        {boardState.map((row, rowNum) => row.map((blockType, colNum) => {
-          const id = getCellId(rowNum, colNum);
-          const previewBlock = activePieceFits ? getPieceBlockForCell(props.activePiece!, props.activeCell!, rowNum, colNum) : undefined;
-          const showPreview = previewBlock != null && previewBlock !== BlockType.EMPTY;
+        {boardState.map((row, rowNum) =>
+          row.map((blockType, colNum) => {
+            const id = getCellId(rowNum, colNum);
+            const previewBlock = activePieceFits
+              ? getPieceBlockForCell(
+                  props.activePiece!,
+                  props.activeCell!,
+                  rowNum,
+                  colNum
+                )
+              : undefined;
+            const showPreview =
+              previewBlock != null && previewBlock !== BlockType.EMPTY;
 
-          return (
-            <BoardCell
-              blockType={showPreview ? previewBlock : blockType}
-              cellRef={rowNum === 0 && colNum === 0 ? props.cellRef : undefined}
-              colNum={colNum}
-              id={id}
-              isPreview={showPreview}
-              key={`${rowNum},${colNum}`}
-              overlays={cellIdToOverlays[id]}
-              rowNum={rowNum}
-            />
-          );
-        }))}
+            return (
+              <BoardCell
+                blockType={showPreview ? previewBlock : blockType}
+                cellRef={
+                  rowNum === 0 && colNum === 0 ? props.cellRef : undefined
+                }
+                colNum={colNum}
+                id={id}
+                isPreview={showPreview}
+                key={`${rowNum},${colNum}`}
+                overlays={cellIdToOverlays[id]}
+                rowNum={rowNum}
+              />
+            );
+          })
+        )}
       </div>
     </div>
   );
@@ -71,14 +101,14 @@ function BoardCell(props: {
   const { setNodeRef } = useDroppable({
     data: {
       colNum: props.colNum,
-      rowNum: props.rowNum
+      rowNum: props.rowNum,
     },
-    id: props.id
+    id: props.id,
   });
 
   return (
     <div
-      className="Board-cell"
+      className={s.Board_cell}
       id={props.id}
       ref={(element) => {
         setNodeRef(element);
@@ -88,16 +118,13 @@ function BoardCell(props: {
         }
       }}
     >
-      <Block
-        isPreview={props.isPreview}
-        type={props.blockType}
-      />
+      <Block isPreview={props.isPreview} type={props.blockType} />
       {props.overlays?.map((overlay) => (
         <div
-          className={`Board-cellOverlay ${overlay.className ?? ''}`}
+          className={c(s.Board_cellOverlay, overlay.className)}
           key={overlay.key}
           style={{
-            zIndex: overlay.zIndex
+            zIndex: overlay.zIndex,
           }}
         >
           {overlay.content}

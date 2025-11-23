@@ -1,5 +1,5 @@
-@import '~/sass/base.scss';
-@import '~/sass/common.scss';
+@use "../../sass/base";
+@use "../../sass/variables";
 
 * {
   touch-action: manipulation;
@@ -7,11 +7,12 @@
 
 html,
 body,
-#react-root {
+#root {
   height: 100%;
   width: 100%;
   overflow: hidden;
   overscroll-behavior: none;
+  touch-action: none;
 }
 
 html {
@@ -19,5 +20,5 @@ html {
   top: 0;
   left: 0;
   transform: scale(1);
-  background: $page-background;
+  background: variables.$page-background;
 }

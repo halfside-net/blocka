@@ -1,0 +1,138 @@
+@use "sass:math";
+@use "../../sass/modules/Button";
+@use "../../sass/variables";
+
+$background: variables.$page-background;
+$checkbox-border-radius: 25%;
+$checkbox-border-width: 2px;
+$checkbox-color: variables.$theme-color-light;
+$checkbox-margin: 12px;
+$checkbox-size: 32px;
+$padding-bottom: 1.5 * variables.$container-padding;
+$padding-side: variables.$container-padding;
+$padding-top: variables.$header-height + 1.5 * variables.$container-padding;
+$section-gap: 32px;
+$setting-background: variables.$theme-color-dark;
+$setting-border-radius: variables.$border-radius-default;
+$setting-color: variables.$theme-color-light;
+$setting-font-size: 18px;
+$setting-font-weight: bold;
+$setting-margin: 16px;
+$setting-padding: 12px;
+$update-color: variables.$theme-color-dark;
+$update-font-weight: bold;
+
+$emit: true !default;
+@if $emit {
+  .SettingsPage {
+    display: flex;
+    height: 100%;
+    background: $background;
+    padding: $padding-top $padding-side $padding-bottom;
+    flex-direction: column;
+    gap: $section-gap;
+    align-items: center;
+
+    &_updateButton {
+      @include Button.default(
+        $scale: math.div($setting-font-size, Button.$font-size-base)
+      );
+
+      position: relative;
+    }
+
+    &_updateBadge {
+      display: flex;
+      position: absolute;
+      top: -0.7 * $setting-font-size;
+      right: -0.7 * $setting-font-size;
+      height: 1.4 * $setting-font-size;
+      width: 1.4 * $setting-font-size;
+      border-radius: 50%;
+      border: 2px solid currentColor;
+      background: variables.$badge-background;
+      justify-content: center;
+      align-items: center;
+      color: variables.$badge-color;
+      font-size: 0.7 * $setting-font-size;
+      font-weight: bold;
+    }
+
+    &_main {
+      display: flex;
+      height: 0;
+      flex-grow: 1;
+      overflow: auto;
+      flex-direction: column;
+      justify-content: center;
+      gap: $section-gap;
+      align-items: center;
+    }
+
+    &_form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    &_setting {
+      display: flex;
+      border-radius: $setting-border-radius;
+      background: $setting-background;
+      padding: $setting-padding;
+      align-items: center;
+      color: $setting-color;
+      font-size: $setting-font-size;
+      font-weight: $setting-font-weight;
+
+      &__checkbox {
+        cursor: pointer;
+      }
+
+      &:not(:first-child) {
+        margin-top: $setting-margin;
+      }
+    }
+
+    &_checkbox {
+      position: relative;
+      margin-right: $checkbox-margin;
+      appearance: none;
+      height: $checkbox-size;
+      width: $checkbox-size;
+      border-radius: $checkbox-border-radius;
+      border: $checkbox-border-width solid $checkbox-color;
+      flex-shrink: 0;
+      cursor: pointer;
+
+      &:checked {
+        border-color: transparent;
+        background: $checkbox-color;
+
+        &::after {
+          position: absolute;
+          bottom: 14%;
+          left: -3%;
+          transform: rotate(45deg);
+          transform-origin: bottom right;
+          height: 80%;
+          width: 40%;
+          border-right: (0.1 * $checkbox-size) solid $setting-background;
+          border-bottom: (0.1 * $checkbox-size) solid $setting-background;
+          content: "";
+        }
+      }
+    }
+
+    &_buttons {
+      display: flex;
+      flex-direction: column;
+      gap: $setting-margin;
+    }
+
+    &_button {
+      @include Button.default(
+        $scale: math.div($setting-font-size, Button.$font-size-base)
+      );
+    }
+  }
+}

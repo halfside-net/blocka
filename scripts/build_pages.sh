@@ -1,6 +1,6 @@
 #!/bin/bash
 
-OUTPUT_PATH='dist/client/'
+OUTPUT_PATH='dist/'
 
 set -e
 
@@ -10,14 +10,6 @@ cd "$(git rev-parse --show-toplevel)"
 # Build site
 npm i
 npm run build
-
-# Fix webmanifest.json
-echo -n "$(grep -v '<head></head>' "${OUTPUT_PATH}webmanifest.json.html" | head -n 1)" > "${OUTPUT_PATH}webmanifest.json"
-
-# Remove unwanted files
-rm "${OUTPUT_PATH}manifest.json" \
-  "${OUTPUT_PATH}vite-plugin-ssr.json" \
-  "${OUTPUT_PATH}webmanifest.json.html"
 
 # Move build output to root directory and remove all other files
 tempdir="$(mktemp -d)"

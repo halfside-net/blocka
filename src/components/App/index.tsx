@@ -1,133 +1,170 @@
-import './index.scss';
-import { useEffect, useState } from 'react';
-import { ReactComponent as CloseSVG } from '~/assets/images/close.svg';
-import { ReactComponent as HomeSVG } from '~/assets/images/home.svg';
-import { ReactComponent as SettingsSVG } from '~/assets/images/settings.svg';
-import Home from '~/components/Home';
-import Game from '~/components/Game';
-import { newGameData } from '~/components/Game/helpers';
-import { GameData } from '~/components/Game/types';
-import SettingsPage from '~/components/SettingsPage';
-import { Settings } from '~/components/SettingsPage/types';
-import { isAppDataV1 } from './helpers';
-import type { AppDataV1 } from './types';
+import c from "classnames";
+import { useEffect, useState } from "react";
+import { useRegisterSW } from "virtual:pwa-register/react";
+import { appId } from "../../../siteconfig.json";
+import CloseSVG from "../../assets/images/close.svg?react";
+import HomeSVG from "../../assets/images/home.svg?react";
+import SettingsSVG from "../../assets/images/settings.svg?react";
+import Game from "../../components/Game";
+import { createNewGameData } from "../../components/Game/helpers";
+import Home from "../../components/Home";
+import SettingsPage from "../../components/SettingsPage";
+import { AppData, zAppData } from "../../schema/AppData";
+import { GameData } from "../../schema/GameData";
+import { Settings } from "../../schema/Settings";
+import s from "./index.module.scss";
 
-const appId = 'blocka';
+/**
+ * AppData version
+ */
+const v = 1;
 
-async function loadData(): Promise<AppDataV1> {
+async function loadData(): Promise<AppData> {
   const jsonData = window.localStorage.getItem(appId);
 
   if (jsonData) {
-    const savedData = JSON.parse(jsonData);
-
-    if (isAppDataV1(savedData)) {
-      return savedData;
+    try {
+      return zAppData.parse(JSON.parse(jsonData));
+    } catch (err) {
+      console.warn("Failed to load saved data. Parse error:", err);
     }
-
-    console.warn('The saved data was in an unknown format. Starting with new data instead.');
   }
 
-  return {
-    version: 1
-  };
+  return { v };
+}
+
+function saveData(data: AppData) {
+  window.localStorage.setItem(appId, JSON.stringify(data));
 }
 
 export default function App() {
   const [isLoaded, setIsLoaded] = useState(false);
-  const [gameData, setGameData] = useState<GameData>({});
-  const [settings, setSettings] = useState<Settings>({});
+  const [gameData, setGameData] = useState<GameData>();
+  const [settings, setSettings] = useState<Settings>();
   const [viewHome, setViewHome] = useState(true);
   const [viewSettings, setViewSettings] = useState(false);
 
-  function save() {
-    const data: AppDataV1 = {
-      gameData,
-      settings,
-      version: 1
-    };
+  const {
+    needRefresh: [needRefresh, setNeedRefresh],
+    updateServiceWorker,
+  } = useRegisterSW({
+    onRegisteredSW(swUrl, r) {
+      if (r) {
+        setInterval(
+          async () => {
+            if (
+              !r.installing &&
+              (window.navigator?.onLine ?? true) &&
+              (
+                await fetch(swUrl, {
+                  cache: "no-store",
+                  headers: {
+                    cache: "no-store",
+                    "cache-control": "no-cache",
+                  },
+                })
+              ).ok
+            ) {
+              await r.update();
+            }
+          },
+          3600000 // 1 hour
+        );
+      }
+    },
+  });
 
-    window.localStorage.setItem(appId, JSON.stringify(data));
+  function updateGameData(newGameData: GameData) {
+    setGameData(newGameData);
+
+    if (isLoaded) {
+      saveData({ gameData: newGameData, settings, v });
+    }
+  }
+
+  function updateSettings(newSettings: Settings) {
+    setSettings(newSettings);
+
+    if (isLoaded) {
+      saveData({ gameData, settings: newSettings, v });
+    }
   }
 
   useEffect(() => {
     loadData()
-      .then(loadedData => {
-        setGameData(loadedData.gameData ?? gameData);
-        setSettings(loadedData.settings ?? settings);
+      .then((loadedData) => {
+        setGameData(loadedData.gameData);
+        setSettings(loadedData.settings);
       })
       .finally(() => setIsLoaded(true));
   }, []);
 
-  useEffect(() => {
-    if (isLoaded) {
-      save();
-    }
-  }, [gameData, settings]);
-
   return (
     <div
-      className={'App'
-        + (isLoaded ? ' is-loaded' : '')
-        + (viewHome ? ' is-showing-home' : '')
-        + (viewSettings ? ' is-showing-settings' : '')
-      }
+      className={c(s.App, {
+        [s.App__reducedMotion]: settings?.disableAnimations,
+        [s.is_showingHome]: viewHome,
+        [s.is_showingSettings]: viewSettings,
+      })}
     >
-      <header className="App-header">
-        {!viewHome && <button
-            aria-label="Home"
-            className="App-levelselectButton"
-            onClick={() => setViewHome(true)}
-          >
-            <HomeSVG
-              className="App-levelselectButtonIcon"
-            />
-          </button>
-        }
-        {isLoaded &&
+      <header>
+        <button
+          aria-label="Home"
+          className={s.App_homeButton}
+          onClick={() => setViewHome(true)}
+        >
+          <HomeSVG className={s.App_homeButtonIcon} />
+        </button>
+        {isLoaded && (
           <button
-            aria-label={viewSettings ? 'Close settings' : 'Settings'}
-            className="App-settingsButton"
+            aria-label={viewSettings ? "Close settings" : "Settings"}
+            className={s.App_settingsButton}
             onClick={() => setViewSettings(!viewSettings)}
           >
-            {viewSettings ?
-              <CloseSVG
-                className="App-settingsButtonIcon"
-              />
-            :
-              <SettingsSVG
-                className="App-settingsButtonIcon"
-              />
-            }
+            {viewSettings ? (
+              <CloseSVG className={s.App_settingsButtonIcon} />
+            ) : (
+              <SettingsSVG className={s.App_settingsButtonIcon} />
+            )}
+            {needRefresh && !viewSettings && (
+              <span className={s.App_settingsBadge}>!</span>
+            )}
           </button>
-        }
+        )}
       </header>
 
-      <div className="App-home">
+      <div className={s.App_home}>
         <Home
-          onNewGame={isLoaded ? () => {
-            if (!gameData.score || window.confirm('End your current game and start a new one?')) {
-              setGameData(newGameData(gameData));
-              setViewHome(false);
-            }
-          } : undefined}
-          onPlay={isLoaded && gameData.score ? () => setViewHome(false) : undefined}
+          onNewGame={
+            isLoaded
+              ? () => {
+                  if (
+                    !gameData?.score ||
+                    window.confirm("End your current game and start a new one?")
+                  ) {
+                    updateGameData(createNewGameData(gameData));
+                    setViewHome(false);
+                  }
+                }
+              : undefined
+          }
+          onPlay={
+            isLoaded && gameData?.score ? () => setViewHome(false) : undefined
+          }
         />
       </div>
-      <div
-        className="App-settings"
-      >
+      <div className={s.App_settings}>
         <SettingsPage
-          onChange={changedSettings => setSettings({ ...settings, ...changedSettings })}
-          onResetHighScore={() => setGameData({ ...gameData, highScore: 0 })}
+          onChange={updateSettings}
+          onResetHighScore={() => updateGameData({ ...gameData, highScore: 0 })}
+          onUpdateApp={needRefresh ? () => updateServiceWorker() : undefined}
           settings={settings}
         />
       </div>
-      <div
-        className="App-level"
-      >
+      <div className={s.App_level}>
         <Game
-          disableAnimations={settings.disableAnimations}
-          onSave={setGameData}
+          disableAnimations={settings?.disableAnimations}
+          onSave={updateGameData}
           gameData={gameData}
         />
       </div>
