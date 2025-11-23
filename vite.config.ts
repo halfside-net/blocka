@@ -10,10 +10,17 @@ import { defineConfig } from "vite";
 import { imagetools } from "vite-imagetools";
 import { VitePWA } from "vite-plugin-pwa";
 import svgr from "vite-plugin-svgr";
-import { description, themeColor, title, titleShort } from "./siteconfig.json";
+import {
+  description,
+  sitePath,
+  themeColor,
+  title,
+  titleShort,
+} from "./siteconfig.json";
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: sitePath,
   css: {
     preprocessorOptions: {
       scss: {
