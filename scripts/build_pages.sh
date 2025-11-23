@@ -14,8 +14,9 @@ npm run build
 # Move build output to root directory and remove all other files
 tempdir="$(mktemp -d)"
 mv $(ls -A "$OUTPUT_PATH" | sed "s#^#${OUTPUT_PATH}#") "$tempdir"
-git clean -fx -d . -e "/${OUTPUT_PATH}"
+rm -r node_modules
+git clean -fx -d
 git rm $(git ls-files)
-rm -r ./*
+ls | xargs -r rm -r
 mv $(ls -A "$tempdir" | sed "s#^#${tempdir}/#") .
 rm -r "$tempdir"
