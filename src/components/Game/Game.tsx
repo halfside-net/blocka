@@ -1,22 +1,17 @@
 import { DndContext, DragOverlay, useDraggable } from "@dnd-kit/core";
 import { useRef, useState } from "react";
 import TrophySVG from "../../assets/images/trophy.svg?react";
-import Block from "../../components/Block";
-import Board from "../../components/Board";
-import { boardGridGapSize } from "../../components/Board/constants";
-import {
-  generateBoardState,
-  pieceFitsOnBoard,
-} from "../../components/Board/helpers";
-import {
-  BoardCellAddress,
-  BoardCellOverlay,
-} from "../../components/Board/types";
-import Piece from "../../components/Piece";
-import { pieceScore } from "../../components/Piece/helpers";
-import { PieceData } from "../../components/Piece/types";
 import { BlockType } from "../../schema/BlockType";
 import { GameData } from "../../schema/GameData";
+import Block from "../Block";
+import Board, {
+  BoardCellAddress,
+  BoardCellOverlay,
+  boardGridGapSize,
+  generateBoardState,
+  pieceFitsOnBoard,
+} from "../Board";
+import Piece, { PieceData, pieceScore } from "../Piece";
 import { boardSize, numPieces, piecePool } from "./constants";
 import s from "./Game.module.scss";
 import { createNewGameData, getNextSeed, getPieces } from "./helpers";

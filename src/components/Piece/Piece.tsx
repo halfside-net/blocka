@@ -1,8 +1,8 @@
 import c from "classnames";
 import { Fragment } from "react";
-import Block from "../../components/Block";
-import { boardGridGapSize } from "../../components/Board/constants";
 import { BlockType } from "../../schema/BlockType";
+import Block from "../Block";
+import { boardGridGapSize } from "../Board";
 import s from "./Piece.module.scss";
 import { PieceData } from "./types";
 

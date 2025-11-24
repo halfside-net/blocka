@@ -1,9 +1,9 @@
 import { useDroppable } from "@dnd-kit/core";
 import c from "classnames";
-import Block from "../../components/Block";
-import { PieceData } from "../../components/Piece/types";
 import { BlockType } from "../../schema/BlockType";
 import { BoardState } from "../../schema/GameData";
+import Block from "../Block";
+import { PieceData } from "../Piece";
 import s from "./Board.module.scss";
 import { boardGridGapSize } from "./constants";
 import {

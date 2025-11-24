@@ -5,13 +5,12 @@ import { appId } from "../../../siteconfig.json";
 import CloseSVG from "../../assets/images/close.svg?react";
 import HomeSVG from "../../assets/images/home.svg?react";
 import SettingsSVG from "../../assets/images/settings.svg?react";
-import Game from "../../components/Game";
-import { createNewGameData } from "../../components/Game/helpers";
-import Home from "../../components/Home";
-import SettingsPage from "../../components/SettingsPage";
 import { AppData, zAppData } from "../../schema/AppData";
 import { GameData } from "../../schema/GameData";
 import { Settings } from "../../schema/Settings";
+import Game, { createNewGameData } from "../Game";
+import Home from "../Home";
+import SettingsPage from "../SettingsPage";
 import s from "./App.module.scss";
 
 /**
