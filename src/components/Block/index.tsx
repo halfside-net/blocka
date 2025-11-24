@@ -1,6 +1,6 @@
 import c from "classnames";
 import { BlockType } from "../../schema/BlockType";
-import s from "./index.module.scss";
+import s from "./Block.module.scss";
 
 export default function Block(props: { isPreview?: boolean; type: BlockType }) {
   return (

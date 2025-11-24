@@ -1,7 +1,7 @@
 import c from "classnames";
 import { titleShort } from "../../../siteconfig.json";
 import logo from "../../assets/images/icon_transparent.png";
-import s from "./index.module.scss";
+import s from "./Home.module.scss";
 
 export default function Home(props: {
   onNewGame?: () => void;

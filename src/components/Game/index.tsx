@@ -18,8 +18,8 @@ import { PieceData } from "../../components/Piece/types";
 import { BlockType } from "../../schema/BlockType";
 import { GameData } from "../../schema/GameData";
 import { boardSize, numPieces, piecePool } from "./constants";
+import s from "./Game.module.scss";
 import { createNewGameData, getNextSeed, getPieces } from "./helpers";
-import s from "./index.module.scss";
 
 const gameCssVars: Record<string, string | number> = {
   "--board-size": boardSize,

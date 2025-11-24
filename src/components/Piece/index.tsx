@@ -3,7 +3,7 @@ import { Fragment } from "react";
 import Block from "../../components/Block";
 import { boardGridGapSize } from "../../components/Board/constants";
 import { BlockType } from "../../schema/BlockType";
-import s from "./index.module.scss";
+import s from "./Piece.module.scss";
 import { PieceData } from "./types";
 
 export default function Piece(props: {

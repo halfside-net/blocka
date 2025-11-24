@@ -4,6 +4,7 @@ import Block from "../../components/Block";
 import { PieceData } from "../../components/Piece/types";
 import { BlockType } from "../../schema/BlockType";
 import { BoardState } from "../../schema/GameData";
+import s from "./Board.module.scss";
 import { boardGridGapSize } from "./constants";
 import {
   generateBoardState,
@@ -11,7 +12,6 @@ import {
   getPieceBlockForCell,
   pieceFitsOnBoard,
 } from "./helpers";
-import s from "./index.module.scss";
 import { BoardCellAddress, BoardCellOverlay } from "./types";
 
 export default function Board(props: {

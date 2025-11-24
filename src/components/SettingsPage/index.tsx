@@ -1,6 +1,6 @@
 import c from "classnames";
 import { Settings } from "../../schema/Settings";
-import s from "./index.module.scss";
+import s from "./SettingsPage.module.scss";
 
 export default function SettingsPage(props: {
   onChange: (settings: Settings) => void;

@@ -12,7 +12,7 @@ import SettingsPage from "../../components/SettingsPage";
 import { AppData, zAppData } from "../../schema/AppData";
 import { GameData } from "../../schema/GameData";
 import { Settings } from "../../schema/Settings";
-import s from "./index.module.scss";
+import s from "./App.module.scss";
 
 /**
  * AppData version
