@@ -11,7 +11,13 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
-    "target": "ESNext"
+    "target": "ESNext",
+    "types": [
+      "vike-react",
+      "vite/client",
+      "vite-plugin-pwa/react",
+      "vite-plugin-svgr/client"
+    ]
   },
-  "include": ["src"]
+  "exclude": ["dist"]
 }
