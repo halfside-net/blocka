@@ -1,6 +1,0 @@
-@use "sass:map";
-@use "./z-index";
-
-@mixin z-index($identifier) {
-  z-index: map.get(z-index.$z-index-map, $identifier);
-}
